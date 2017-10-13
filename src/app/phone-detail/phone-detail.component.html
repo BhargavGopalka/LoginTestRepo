@@ -1,0 +1,87 @@
+<button (click)="showProperty(null)">Add</button>
+<br><br>
+<fieldset *ngIf="showForm">
+  <form [formGroup]="numberForm" (submit)="addNumber(numberForm.value)">
+    <br><br>
+    Phone Number: <input type="text" placeholder="Phone Number" formControlName="phone_number"><br><br>
+
+    Select type: <select formControlName="phone_type_id">
+    <option value="1">Mobile</option>
+    <option value="2">Phone</option>
+    <option value="3">Fax</option>
+  </select><br><br>
+
+    Organization: <select formControlName="org_id">
+    <option value="0">Select Organization</option>
+    <option *ngFor="let org of organizationList" value={{org.id}}>{{org.name}}</option>
+  </select><br><br>
+
+    Country: <select formControlName="country_id" (change)="onSelectState($event.target.value)">
+    <option value="0">Select Country</option>
+    <option *ngFor="let country of countryList" value={{country.id}}>{{country.country}}</option>
+  </select><br><br>
+
+    State: <select formControlName="state_id" (change)="onSelectCity($event.target.value)">
+    <option value="0">Select State</option>
+    <option *ngFor="let state of selectedState" value={{state.id}}>{{state.state}}</option>
+  </select><br><br>
+
+    City: <select formControlName="city_id">
+    <option value="0">Select City</option>
+    <option *ngFor="let city of selectedCity" value={{city.id}}>{{city.name}}</option>
+  </select><br><br>
+
+    Street: <select formControlName="street">
+    <option value="0">Select Street</option>
+    <option *ngFor="let street of streetList" value="{{street.street}}">{{street.street}}</option>
+  </select><br><br>
+
+    Postal Code: <input type="text" placeholder="Enter Code" formControlName="postal_code"><br><br>
+
+    Crawl Number: <input type="checkbox" formControlName="isCrawl"><br><br>
+
+    <button type="submit">{{ selectNumber ? 'Update' : 'Add'}}</button>
+    <button type="reset" (click)="goPrev()">Cancel</button>
+  </form>
+</fieldset>
+<br><br>
+
+<div *ngIf="showTable">
+  <table border="1">
+    <tr>
+      <th>Index</th>
+      <th>Organization</th>
+      <th>Number</th>
+      <th>Department</th>
+      <th>Extension</th>
+      <th>Country</th>
+      <th>State</th>
+      <th>City</th>
+      <th>Street</th>
+      <th>Postal Code</th>
+      <th>Update</th>
+      <th>Remove</th>
+    </tr>
+
+    <tr
+      *ngFor="let numberInfo of numberList | paginate: { itemsPerPage: pageItems, currentPage: p, totalItems: tPage }; let i = index">
+      <td>{{i + 1}}</td>
+      <td>{{numberInfo.org}}</td>
+      <td>{{numberInfo.phone_number}}</td>
+      <td>{{numberInfo.department}}</td>
+      <td>{{numberInfo.extension}}</td>
+      <td>{{numberInfo.country}}</td>
+      <td>{{numberInfo.state}}</td>
+      <td>{{numberInfo.city}}</td>
+      <td>{{numberInfo.street}}</td>
+      <td>{{numberInfo.postal_code}}</td>
+      <td>
+        <button (click)="showProperty(numberInfo)">Edit</button>
+      </td>
+      <td>
+        <button (click)="removeNumber(numberInfo.phone_id, i)">Delete</button>
+      </td>
+    </tr>
+  </table>
+
+  <app-pagination (pageChange)="p = $event;getNumberDetail()" (numberChange)="onChange($event)"></app-pagination>

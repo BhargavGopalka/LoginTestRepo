@@ -1,0 +1,12 @@
+<div>
+  <fieldset>
+    <form [formGroup]="form" (submit)="addOrg(form.value)">
+      <br>
+      Organization Name:
+      <input type="text" placeholder="Name" formControlName="name"><br><br>
+      <button type="submit">Add</button>
+      <button type="button" (click)="goPrev()">Cancel</button>
+      <br>
+    </form>
+  </fieldset>
+</div>

@@ -1,0 +1,13 @@
+<h2>Test Tutorial Project</h2>
+<form [formGroup]="loginForm" (submit)="login(loginForm.value)">
+  <fieldset>
+    Username: <input type="text" name="username" id="username" placeholder="Username" formControlName="username"><br>
+    <div *ngIf="usernameValidation(loginForm.controls['username'])">{{usernameMessage}}
+    </div>
+    <br><br>
+    Password: <input type="password" name="password" id="password" placeholder="Password" formControlName="password">
+    <div *ngIf="passwordValidation(loginForm.controls['password'])">{{passwordMessage}}</div><br><br>
+    <button type="submit" value="Login">Login</button>
+    <br><br>
+  </fieldset>
+</form>

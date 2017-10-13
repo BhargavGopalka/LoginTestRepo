@@ -1,0 +1,15 @@
+<div>
+  <br><br>
+  <fieldset>
+    <br>
+    <form [formGroup]="form" (submit)="addCountry(form.value)">
+      Country Name:<input type="text" placeholder="Name" formControlName="country"><br><br>
+      Country Code:<input type="text" placeholder="Country Code" formControlName="code"><br><br>
+      Dialing Code:<input type="text" placeholder="Dialing Code" formControlName="dialing_code"><br><br>
+      <br><br>
+      <button type="submit">Add</button>
+      <button type="button" (click)="goPrev()">Cancel</button>
+      <br>
+    </form>
+  </fieldset>
+</div>

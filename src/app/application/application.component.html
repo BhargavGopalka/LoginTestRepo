@@ -1,0 +1,49 @@
+<button (click)="showForm(null)">Add</button>
+<br><br>
+<div *ngIf="formShow">
+  <fieldset>
+    <form [formGroup]="appForm" (submit)="addApp(appForm.value)">
+      <br>
+      App:
+      <input type="text" placeholder="Enter Url" formControlName="url"><br><br>
+      Description:
+      <input type="text" placeholder="Enter Description" formControlName="description"><br><br>
+      <button type="submit">{{selectApp ? 'Update' : 'Add'}}</button>
+      <button type="reset" (click)="goPrev()">Cancel</button>
+      <br>
+    </form>
+  </fieldset>
+</div>
+<br><br>
+<div *ngIf="tableShow">
+  <table border="1">
+    <tr>
+      <th>Index</th>
+      <th>App</th>
+      <th>Description</th>
+      <th>Update</th>
+      <th>Delete</th>
+    </tr>
+
+    <tr>
+      <td colspan="5">
+        <input #searchBox id="search-box" placeholder="Search App" (keyup)="searchApp(searchBox.value)"/>
+      </td>
+    </tr>
+
+    <tr
+      *ngFor="let appInfo of appList | paginate:{itemsPerPage: items, currentPage: pageNumber, totalItems: totalNumRecords}; let i = index">
+      <th>{{i + 1}}</th>
+      <th>{{appInfo.url}}</th>
+      <th>{{appInfo.description}}</th>
+      <th>
+        <button (click)="showForm(appInfo)">Edit</button>
+      </th>
+      <th>
+        <button (click)="removeApp(appInfo.id, i)">Remove</button>
+      </th>
+    </tr>
+  </table>
+</div>
+
+<app-pagination (pageChange)="pageNumber = $event;getApp()" (numberChange)="numChange($event)"></app-pagination>

@@ -1,0 +1,54 @@
+<button (click)="showForm(null)">Add</button>
+<div *ngIf="formShow">
+  <br><br>
+
+  <fieldset>
+    <br>
+    <form [formGroup]="countryForm" (submit)="addCountry(countryForm.value)">
+      Country Name:<input type="text" placeholder="Name" formControlName="country"><br><br>
+      Country Code:<input type="text" placeholder="Country Code" formControlName="code"><br><br>
+      Dialing Code:<input type="text" placeholder="Dialing Code" formControlName="dialing_code"><br><br>
+      <br><br>
+      <button type="submit">{{selectCountry ? 'Update' : 'Add'}}</button>
+      <button type="reset" (click)="goPrev()">Cancel</button>
+      <br>
+    </form>
+  </fieldset>
+</div>
+
+<div *ngIf="tableShow">
+  <br><br>
+  <table border="1">
+    <tr>
+      <th>Index</th>
+      <th>Country</th>
+      <th>Code</th>
+      <th>Phone Number Code</th>
+      <th>Update</th>
+      <th>Remove</th>
+    </tr>
+
+    <tr>
+      <td colspan="6">
+        <input #searchBox id="search-box" placeholder="Search Country" (keyup)="searchCountry(searchBox.value)"/>
+      </td>
+    </tr>
+
+    <tr
+      *ngFor="let countryInfo of countryList | paginate:{itemsPerPage: items, currentPage: pageNumber, totalItems: totalNumRecords}; let i = index">
+      <td>{{i + 1}}</td>
+      <td>{{countryInfo.country}}</td>
+      <td>{{countryInfo.code}}</td>
+      <td>{{countryInfo.dialing_code}}</td>
+      <td>
+        <button (click)="showForm(countryInfo)">Edit</button>
+      </td>
+      <td>
+        <button (click)="removeCountry(countryInfo.id, i)">Delete</button>
+      </td>
+    </tr>
+  </table>
+
+<app-pagination (pageChange)="pageNumber = $event; getCountry()" (numberChange)="recordChange($event)"></app-pagination>
+
+</div>

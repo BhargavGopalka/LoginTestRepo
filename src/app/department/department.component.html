@@ -1,0 +1,46 @@
+<button (click)="showProperty(null)">Add</button>
+<br><br>
+<fieldset *ngIf="showForm">
+  <form [formGroup]="departmentForm" (submit)="addDepartment(departmentForm.value)">
+    Organization: <select formControlName="org_id">
+    <option value="0">Select Organization</option>
+    <option *ngFor="let org of organizations" value={{org.id}}>{{org.name}}</option>
+  </select><br><br>
+    Name: <input type="text" placeholder="Department Name" formControlName="name"><br><br>
+    <button type="submit">{{ selectDepartment ? 'Update' : 'Add'}}</button>
+    <button type="reset" (click)="goPrev()">Cancel</button>
+  </form>
+</fieldset>
+<br><br>
+
+<table border="1" *ngIf="showTable">
+
+  <tr>
+    <th>Index</th>
+    <th>Name</th>
+    <th>Organization</th>
+    <th>Update</th>
+    <th>Remove</th>
+  </tr>
+
+  <tr>
+    <td colspan="5">
+      <input #searchBox id="search-box" placeholder="Search Department" (keyup)="searchDep(searchBox.value)"/>
+    </td>
+  </tr>
+
+  <tr
+    *ngFor="let departmentInfo of departmentList | paginate: {itemsPerPage: items, currentPage: pageNumber, totalItems: totalNumRecords}; let i = index">
+    <td>{{i + 1}}</td>
+    <td>{{departmentInfo.department}}</td>
+    <td>{{departmentInfo.organization}}</td>
+    <td>
+      <button (click)="showProperty(departmentInfo)">Edit</button>
+    </td>
+    <td>
+      <button (click)="removeDepartment(departmentInfo.id, i)">Delete</button>
+    </td>
+  </tr>
+</table>
+
+<app-pagination (pageChange)="pageNumber = $event; getDepartment()" (numberChange)="numChange($event)" ></app-pagination>

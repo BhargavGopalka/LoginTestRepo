@@ -1,0 +1,49 @@
+<button (click)="showProperty(null)">Add</button>
+<br><br>
+<fieldset *ngIf="showForm">
+  <form [formGroup]="cityForm" (submit)="addCity(cityForm.value)">
+    State: <select formControlName="state_id">
+    <option value="0">Select State</option>
+    <option *ngFor="let state of stateList" value={{state.id}}>{{state.state}}</option>
+  </select><br><br>
+    City: <input type="text" placeholder="Enter City" formControlName="name"><br><br>
+    Code: <input type="text" placeholder="Enter Code" formControlName="code"><br><br>
+    <button type="submit">{{ selectCity ? 'Update' : 'Add'}}</button>
+    <button type="reset" (click)="goPrev()">Cancel</button>
+  </form>
+</fieldset>
+<br><br>
+
+<table border="1" *ngIf="showTable">
+
+  <tr>
+    <th>Index</th>
+    <th>City</th>
+    <th>State</th>
+    <th>Code</th>
+    <th>Update</th>
+    <th>Remove</th>
+  </tr>
+
+  <tr>
+    <td colspan="6">
+      <input #searchBox id="search-box" placeholder="Search City" (keyup)="searchCity(searchBox.value)"/>
+    </td>
+  </tr>
+
+  <tr
+    *ngFor="let cityInfo of cityList | paginate:{itemsPerPage: items, currentPage: pageNumber, totalItems: totalNumRecords}; let i = index">
+    <td>{{i + 1}}</td>
+    <td>{{cityInfo.name}}</td>
+    <td>{{cityInfo.state}}</td>
+    <td>{{cityInfo.code}}</td>
+    <td>
+      <button (click)="showProperty(cityInfo)">Edit</button>
+    </td>
+    <td>
+      <button (click)="removeCity(cityInfo.id, i)">Delete</button>
+    </td>
+  </tr>
+</table>
+
+<app-pagination (pageChange)="pageNumber = $event; getCity()" (numberChange)="numChange($event)"></app-pagination>

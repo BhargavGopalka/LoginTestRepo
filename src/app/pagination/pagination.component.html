@@ -1,0 +1,9 @@
+<div>
+  <pagination-controls (pageChange)="pageChange.emit($event)"></pagination-controls>
+  <label>
+    <label>Records Per Page:</label>
+    <select (change)="numberChange.emit($event.target.value)">
+      <option *ngFor="let num of RecordsPerPage" value="{{num}}">{{num}}</option>
+    </select>
+  </label>
+</div>

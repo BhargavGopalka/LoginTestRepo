@@ -1,0 +1,68 @@
+<button (click)="showProperty(null)">Add</button>
+<br><br>
+<fieldset *ngIf="showForm">
+  <form [formGroup]="locationForm" (submit)="addLocation(locationForm.value)">
+    <br><br>
+    Street: <input type="text" placeholder="Street Name" formControlName="street"><br><br>
+    Organization: <select formControlName="org_id">
+    <option value="0">Select Organization</option>
+    <option *ngFor="let org of organizationList" value={{org.id}}>{{org.name}}</option>
+  </select><br><br>
+    Country: <select formControlName="country_id" (change)="onSelectState($event.target.value)">
+    <option value="0">Select Country</option>
+    <option *ngFor="let country of countryList" value={{country.id}}>{{country.country}}</option>
+  </select><br><br>
+    State: <select formControlName="state_id" (change)="onSelectCity($event.target.value)">
+    <option value="0">Select State</option>
+    <option *ngFor="let state of selectedState" value={{state.id}}>{{state.state}}</option>
+  </select><br><br>
+    City: <select formControlName="city_id">
+    <option value="0">Select City</option>
+    <option *ngFor="let city of selectedCity" value={{city.id}}>{{city.name}}</option>
+  </select><br><br>
+    Postal Code: <input type="text" placeholder="Enter Code" formControlName="postal_code"><br><br>
+    <button type="submit">{{ selectLocation ? 'Update' : 'Add'}}</button>
+    <button type="reset" (click)="goPrev()">Cancel</button>
+  </form>
+</fieldset>
+<br><br>
+
+<table border="1" *ngIf="showTable">
+
+  <tr>
+    <th>Index</th>
+    <th>Street Name</th>
+    <th>Organization</th>
+    <th>Country</th>
+    <th>State</th>
+    <th>City</th>
+    <th>Postal Code</th>
+    <th>Update</th>
+    <th>Remove</th>
+  </tr>
+
+  <tr>
+    <td colspan="6">
+      <input #searchBox id="search-box" placeholder="Search Street" (keyup)="searchStreet(searchBox.value)"/>
+    </td>
+  </tr>
+
+  <tr
+    *ngFor="let locationInfo of locationList | paginate:{itemsPerPage: items, currentPage: pageNumber, totalItems: totalNumRecords}; let i = index">
+    <td>{{i + 1}}</td>
+    <td>{{locationInfo.street}}</td>
+    <td>{{locationInfo.organization}}</td>
+    <td>{{locationInfo.country}}</td>
+    <td>{{locationInfo.state}}</td>
+    <td>{{locationInfo.city}}</td>
+    <td>{{locationInfo.postal_code}}</td>
+    <td>
+      <button (click)="showProperty(locationInfo)">Edit</button>
+    </td>
+    <td>
+      <button (click)="removeLocation(locationInfo.id, i)">Delete</button>
+    </td>
+  </tr>
+</table>
+
+<app-pagination (pageChange)="pageNumber = $event; getLocation()" (numberChange)="numChange($event)"></app-pagination>

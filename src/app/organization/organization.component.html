@@ -1,0 +1,50 @@
+<button (click)="showForm(null)">Add</button>
+<br><br>
+<div *ngIf="formShow">
+  <fieldset>
+    <form [formGroup]="dataForm" (submit)="addOrg(dataForm.value)">
+      <br>
+      Organization Name:
+      <input type="text" placeholder="Name" formControlName="name"><br><br>
+      <button type="submit">{{selectedOrg ? 'Update' : 'Add'}}</button>
+      <button type="reset" (click)="goPrev()">Cancel</button>
+      <br>
+    </form>
+  </fieldset>
+</div>
+<br><br>
+<div *ngIf="tableShow">
+  <br>
+  <!--<input #searchBox id="search-box" placeholder="Search Organization" (keyup)="searchOrg(searchBox.value)" />-->
+  <!--<div *ngFor="let org of Organization">{{org.name}}</div>-->
+  <br><br>
+  <table border="1">
+    <tr>
+      <th>Number</th>
+      <th>Organization</th>
+      <th>Update</th>
+      <th>Delete</th>
+    </tr>
+
+    <tr>
+      <td colspan="4">
+        <input #searchBox id="search-box" placeholder="Search Organization" (keyup)="searchOrg(searchBox.value)"/>
+      </td>
+    </tr>
+
+    <tr
+      *ngFor="let org of Organization | paginate: {itemsPerPage: items, currentPage: p, totalItems: totalNumRecords}; let i = index">
+      <th>{{i+1}}</th>
+      <th>{{org.name}}</th>
+      <th>
+        <button (click)="showForm(org)">Edit</button>
+      </th>
+      <th>
+        <button (click)="removeOrg(org.id, i)">Remove</button>
+      </th>
+    </tr>
+  </table>
+
+  <app-pagination (pageChange)="p = $event;getOrg()" (numberChange)="recordChange($event)"></app-pagination>
+
+</div>

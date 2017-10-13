@@ -1,0 +1,39 @@
+<h2>Welcome Users!</h2>
+
+<button routerLink="organization">Organization</button>
+<button routerLink="orgData">Add Organization Data</button>
+<button routerLink="country">Country</button>
+<button routerLink="countryData">Add Country Data</button>
+<button routerLink="state">States</button>
+<button routerLink="department">Department</button>
+<button routerLink="city">City</button>
+<button routerLink="location">Location</button>
+<button routerLink="application">App</button>
+<button routerLink="phone">Add Number</button>
+<button type="submit" (click)="logOut()">Logout</button>
+<br><br>
+
+<div>
+  <p>Today is {{today | date}}</p>
+  <p>Current Time is {{today | date:'shortTime'}}</p>
+</div>
+
+<br><br>
+<table border="1">
+  <tr>
+    <th>Organization</th>
+    <th>Number</th>
+    <th>Department</th>
+    <th>Extension</th>
+    <th>Country</th>
+    <th>State</th>
+  </tr>
+  <tr *ngFor="let detail of details">
+    <td>{{detail.org}}</td>
+    <td [innerHTML]="detail.phone_number | boldPipe"></td>
+    <td>{{detail.department}}</td>
+    <td>{{detail.extension}}</td>
+    <td>{{detail.country | uppercase}}</td>
+    <td>{{detail.state}}</td>
+  </tr>
+</table>

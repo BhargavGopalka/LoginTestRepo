@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Country} from './country.model';
-import {AppServiceService} from '../app-service.service';
+import {AppServiceService} from '../utility/shared-services/app-service.service';
 import {Headers, Http, RequestOptions} from '@angular/http';
 import {ApiEndpoints} from "../api-endpoints";
 
@@ -15,6 +15,7 @@ export class CountryComponent implements OnInit {
   items = 20;
   pageNumber = 1;
   totalNumRecords: number;
+  message: string;
 
   countryList: Country[] = [];
 
@@ -65,29 +66,30 @@ export class CountryComponent implements OnInit {
   }
 
   addCountry(formVal: any) {
-
-    // const url = `country`;
-    if (this.selectCountry == null) {
-      this.appService.postAPI(ApiEndpoints.Country, formVal)
-        .subscribe(() => {
+    if (this.countryForm.valid === true) {
+      // const url = `country`;
+      if (this.selectCountry == null) {
+        this.appService.postAPI(ApiEndpoints.Country, formVal)
+          .subscribe(() => {
+              this.getCountry();
+              this.tableShow = true;
+              this.formShow = false;
+              // this.details.push(res.json().payload.data);
+              // console.log(this.details);
+              // this.http.get(url, option)
+              //   .subscribe( respon => {this.details.push(respon.json());
+              //   console.log(this.details); });
+            },
+            msg => console.log(`Error: ${msg.status} ${msg.statusText}`));
+      } else {
+        this.appService.putAPI(ApiEndpoints.Country + '/' + this.selectCountry.id, formVal)
+          .subscribe(res => {
+            console.log(res);
             this.getCountry();
             this.tableShow = true;
             this.formShow = false;
-            // this.details.push(res.json().payload.data);
-            // console.log(this.details);
-            // this.http.get(url, option)
-            //   .subscribe( respon => {this.details.push(respon.json());
-            //   console.log(this.details); });
-          },
-          msg => console.log(`Error: ${msg.status} ${msg.statusText}`));
-    } else {
-      this.appService.putAPI(ApiEndpoints.Country + '/' + this.selectCountry.id, formVal)
-        .subscribe(res => {
-          console.log(res);
-          this.getCountry();
-          this.tableShow = true;
-          this.formShow = false;
-        });
+          });
+      }
     }
   }
 
@@ -101,9 +103,17 @@ export class CountryComponent implements OnInit {
       });
   }
 
+  nameValidation(control: AbstractControl) {
+    if (control.errors) {
+      return this.message = `Name required`;
+    } else {
+      return null;
+    }
+  }
+
   initial(countryData: any) {
     this.countryForm = this.fb.group({
-      country: [countryData ? countryData.country : ''],
+      country: [countryData ? countryData.country : '', Validators.required],
       code: [countryData ? countryData.code : ''],
       dialing_code: [countryData ? countryData.dialing_code : '']
     });

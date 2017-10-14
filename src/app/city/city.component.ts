@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {City} from './city.model';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {AppServiceService} from '../app-service.service';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AppServiceService} from '../utility/shared-services/app-service.service';
 import {ApiEndpoints} from '../api-endpoints';
 
 @Component({
@@ -14,6 +14,8 @@ export class CityComponent implements OnInit {
   items = 20;
   pageNumber = 1;
   totalNumRecords: number;
+  stateMessage: string;
+  cityMessage: string;
 
   cityList: City[] = [];
   stateList = [];
@@ -66,31 +68,49 @@ export class CityComponent implements OnInit {
       });
   }
 
-  addCity(formValue: any) {
-    if (this.selectCity == null) {
-      // const url = `city`;
-      this.appService.postAPI(ApiEndpoints.City, formValue)
-        .subscribe(res => {
-            console.log(res);
-            this.getCity();
-            this.showTable = true;
-            this.showForm = false;
-          },
-          msg => {
-            console.log(`Error: ${msg.status} ${msg.statusText}`);
-          });
+  stateValidation(control: AbstractControl) {
+    if (control.errors) {
+      return this.stateMessage = `Must select a State`;
     } else {
-      // const anotherUrl = `city/${this.selectCity.id}`;
-      this.appService.putAPI(ApiEndpoints.City + `/${this.selectCity.id}`, formValue)
-        .subscribe(res => {
-            console.log(res);
-            this.getCity();
-            this.showTable = true;
-            this.showForm = false;
-          },
-          msg => {
-            console.log(`Error: ${msg.status} ${msg.statusText}`);
-          });
+      return null;
+    }
+  }
+
+  cityValidation(control: AbstractControl) {
+    if (control.errors) {
+      return this.cityMessage = `Name is required`;
+    } else {
+      return null;
+    }
+  }
+
+  addCity(formValue: any) {
+    if (this.cityForm.valid === true) {
+      if (this.selectCity == null) {
+        // const url = `city`;
+        this.appService.postAPI(ApiEndpoints.City, formValue)
+          .subscribe(res => {
+              console.log(res);
+              this.getCity();
+              this.showTable = true;
+              this.showForm = false;
+            },
+            msg => {
+              console.log(`Error: ${msg.status} ${msg.statusText}`);
+            });
+      } else {
+        // const anotherUrl = `city/${this.selectCity.id}`;
+        this.appService.putAPI(ApiEndpoints.City + `/${this.selectCity.id}`, formValue)
+          .subscribe(res => {
+              console.log(res);
+              this.getCity();
+              this.showTable = true;
+              this.showForm = false;
+            },
+            msg => {
+              console.log(`Error: ${msg.status} ${msg.statusText}`);
+            });
+      }
     }
   }
 
@@ -105,8 +125,8 @@ export class CityComponent implements OnInit {
 
   initial(cityData: any) {
     this.cityForm = this.fb.group({
-      state_id: [cityData ? cityData.state_id : ''],
-      name: [cityData ? cityData.name : ''],
+      state_id: [cityData ? cityData.state_id : '', Validators.required],
+      name: [cityData ? cityData.name : '', Validators.required],
       code: [cityData ? cityData.code : '']
     });
   }

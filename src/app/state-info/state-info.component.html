@@ -3,10 +3,14 @@
 <fieldset *ngIf="showForm">
   <form [formGroup]="stateForm" (submit)="addState(stateForm.value)">
     Country: <select formControlName="country_id">
-    <option value="0">Select Country</option>
+    <option value="" disabled>Select Country</option>
     <option *ngFor="let country of countries" value={{country.id}}>{{country.country}}</option>
-  </select><br><br>
-    State: <input type="text" placeholder="Enter State" formControlName="state"><br><br>
+  </select><br>
+    <div *ngIf="countryValidation(stateForm.controls['country_id'])">{{messageCountry}}</div>
+    <br><br>
+    State: <input type="text" placeholder="Enter State" formControlName="state"><br>
+    <div *ngIf="stateValidation(stateForm.controls['state'])">{{message}}</div>
+    <br><br>
     Code: <input type="text" placeholder="Enter Code" formControlName="code"><br><br>
     <button type="submit">{{ selectState ? 'Update' : 'Add'}}</button>
     <button type="reset" (click)="goPrev()">Cancel</button>
@@ -46,4 +50,4 @@
   </tr>
 </table>
 
-<app-pagination (pageChange)="pageNumber = $event; getState()" (numberChange)="numChange($event)"></app-pagination>
+<app-pagination *ngIf="showTable" (pageChange)="pageNumber = $event; getState()" (numberChange)="numChange($event)"></app-pagination>

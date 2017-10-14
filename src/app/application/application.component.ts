@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Application} from './application.model';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {AppServiceService} from '../app-service.service';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AppServiceService} from '../utility/shared-services/app-service.service';
 import {ApiEndpoints} from '../api-endpoints';
 
 @Component({
@@ -14,6 +14,7 @@ export class ApplicationComponent implements OnInit {
   items = 20;
   pageNumber = 1;
   totalNumRecords: number;
+  urlMessage: string;
 
   appList: Application[] = [];
 
@@ -56,26 +57,38 @@ export class ApplicationComponent implements OnInit {
       });
   }
 
+  urlValidation(control: AbstractControl) {
+    if (control.errors === null) {
+      return null;
+    } else if (control.errors.required) {
+      return this.urlMessage = `URL required`;
+    } else if (control.errors.pattern) {
+      return this.urlMessage = `It must be a URL`;
+    }
+  }
+
   addApp(formVal: any) {
-    // const url = `app`;
-    if (this.selectApp == null) {
-      this.appService.postAPI(ApiEndpoints.App, formVal)
-        .subscribe(res => {
-            console.log(res);
-            this.getApp();
-            this.tableShow = true;
-            this.formShow = false;
-          },
-          msg => console.log(`Error: ${msg.status} ${msg.statusText}`));
-    } else {
-      this.appService.putAPI(ApiEndpoints.App + '/' + this.selectApp.id, formVal)
-        .subscribe(res => {
-            console.log(res);
-            this.getApp();
-            this.tableShow = true;
-            this.formShow = false;
-          },
-          msg => console.log(`Error: ${msg.status} ${msg.statusText}`));
+    if (this.appForm.valid === true) {
+      // const url = `app`;
+      if (this.selectApp == null) {
+        this.appService.postAPI(ApiEndpoints.App, formVal)
+          .subscribe(res => {
+              console.log(res);
+              this.getApp();
+              this.tableShow = true;
+              this.formShow = false;
+            },
+            msg => console.log(`Error: ${msg.status} ${msg.statusText}`));
+      } else {
+        this.appService.putAPI(ApiEndpoints.App + '/' + this.selectApp.id, formVal)
+          .subscribe(res => {
+              console.log(res);
+              this.getApp();
+              this.tableShow = true;
+              this.formShow = false;
+            },
+            msg => console.log(`Error: ${msg.status} ${msg.statusText}`));
+      }
     }
   }
 
@@ -91,7 +104,11 @@ export class ApplicationComponent implements OnInit {
 
   initialForm(appData: any) {
     this.appForm = this.fb.group({
-      url: [appData ? appData.url : ''],
+      url: [appData ? appData.url : '',
+        [
+          Validators.required,
+          Validators.pattern('https?://.+')]
+      ],
       description: [appData ? appData.description : '']
     });
   }

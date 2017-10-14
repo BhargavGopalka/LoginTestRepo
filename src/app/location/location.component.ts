@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Location} from './location.model';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {AppServiceService} from '../app-service.service';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AppServiceService} from '../utility/shared-services/app-service.service';
 import 'rxjs/add/operator/filter';
 import {State} from '../state-info/state.model';
 import {City} from '../city/city.model';
@@ -17,6 +17,10 @@ export class LocationComponent implements OnInit {
   items = 20;
   pageNumber = 1;
   totalNumRecords: number;
+  postalMessage: string;
+  streetMessage: string;
+  orgMessage: string;
+  countryMessage: string;
 
   locationList: Location[] = [];
   stateList: State[];
@@ -74,31 +78,65 @@ export class LocationComponent implements OnInit {
       });
   }
 
-  addLocation(formValue: any) {
-    if (this.selectLocation == null) {
-      // const url = `location`;
-      this.appService.postAPI(ApiEndpoints.Location, formValue)
-        .subscribe(res => {
-            console.log(res);
-            this.getLocation();
-            this.showTable = true;
-            this.showForm = false;
-          },
-          msg => {
-            console.log(`Error: ${msg.status} ${msg.statusText}`);
-          });
+  streetValidation(control: AbstractControl) {
+    if (control.errors) {
+      return this.streetMessage = `Name is required`;
     } else {
-      // const url = `city/${this.selectLocation.id}`;
-      this.appService.putAPI(ApiEndpoints.City + `/${this.selectLocation.id}`, formValue)
-        .subscribe(res => {
-            console.log(res);
-            this.getLocation();
-            this.showTable = true;
-            this.showForm = false;
-          },
-          msg => {
-            console.log(`Error: ${msg.status} ${msg.statusText}`);
-          });
+      return null;
+    }
+  }
+
+  orgValidation(control: AbstractControl) {
+    if (control.errors) {
+      return this.orgMessage = `Must select a Organization`;
+    } else {
+      return null;
+    }
+  }
+
+  countryValidation(control: AbstractControl) {
+    if (control.errors) {
+      return this.countryMessage = `Must select a Country`;
+    } else {
+      return null;
+    }
+  }
+
+  postalValidation(control: AbstractControl) {
+    if (control.errors) {
+      return this.postalMessage = `Postal Code should be numbers`;
+    } else {
+      return null;
+    }
+  }
+
+  addLocation(formValue: any) {
+    if (this.locationForm.valid === true) {
+      if (this.selectLocation == null) {
+        // const url = `location`;
+        this.appService.postAPI(ApiEndpoints.Location, formValue)
+          .subscribe(res => {
+              console.log(res);
+              this.getLocation();
+              this.showTable = true;
+              this.showForm = false;
+            },
+            msg => {
+              console.log(`Error: ${msg.status} ${msg.statusText}`);
+            });
+      } else {
+        // const url = `city/${this.selectLocation.id}`;
+        this.appService.putAPI(ApiEndpoints.City + `/${this.selectLocation.id}`, formValue)
+          .subscribe(res => {
+              console.log(res);
+              this.getLocation();
+              this.showTable = true;
+              this.showForm = false;
+            },
+            msg => {
+              console.log(`Error: ${msg.status} ${msg.statusText}`);
+            });
+      }
     }
   }
 
@@ -155,12 +193,12 @@ export class LocationComponent implements OnInit {
 
   initial(locationData: any) {
     this.locationForm = this.fb.group({
-      street: [locationData ? locationData.street : ''],
-      org_id: [locationData ? locationData.org_id : ''],
-      country_id: [locationData ? locationData.country_id : ''],
+      street: [locationData ? locationData.street : '', Validators.required],
+      org_id: [locationData ? locationData.org_id : '', Validators.required],
+      country_id: [locationData ? locationData.country_id : '', Validators.required],
       state_id: [locationData ? locationData.state_id : ''],
       city_id: [locationData ? locationData.city_id : ''],
-      postal_code: [locationData ? locationData.postal_code : '']
+      postal_code: [locationData ? locationData.postal_code : '', Validators.pattern('[0-9]*')]
     });
   }
 

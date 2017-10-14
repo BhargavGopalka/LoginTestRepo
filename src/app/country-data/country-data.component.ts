@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {Router} from '@angular/router';
-import {AppServiceService} from '../app-service.service';
+import {AppServiceService} from '../utility/shared-services/app-service.service';
 
 @Component({
   selector: 'app-country-data',

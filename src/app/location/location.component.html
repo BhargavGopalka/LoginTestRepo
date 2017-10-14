@@ -3,24 +3,28 @@
 <fieldset *ngIf="showForm">
   <form [formGroup]="locationForm" (submit)="addLocation(locationForm.value)">
     <br><br>
-    Street: <input type="text" placeholder="Street Name" formControlName="street"><br><br>
+    Street: <input type="text" placeholder="Street Name" formControlName="street"><br>
+    <div *ngIf="streetValidation(locationForm.controls['street'])">{{streetMessage}}</div><br><br>
     Organization: <select formControlName="org_id">
-    <option value="0">Select Organization</option>
+    <option value="" disabled>Select Organization</option>
     <option *ngFor="let org of organizationList" value={{org.id}}>{{org.name}}</option>
-  </select><br><br>
+  </select><br>
+    <div *ngIf="orgValidation(locationForm.controls['org_id'])">{{orgMessage}}</div><br><br>
     Country: <select formControlName="country_id" (change)="onSelectState($event.target.value)">
-    <option value="0">Select Country</option>
+    <option value="" disabled>Select Country</option>
     <option *ngFor="let country of countryList" value={{country.id}}>{{country.country}}</option>
-  </select><br><br>
+  </select><br>
+    <div *ngIf="countryValidation(locationForm.controls['country_id'])">{{countryMessage}}</div><br><br>
     State: <select formControlName="state_id" (change)="onSelectCity($event.target.value)">
-    <option value="0">Select State</option>
+    <option value="" disabled>Select State</option>
     <option *ngFor="let state of selectedState" value={{state.id}}>{{state.state}}</option>
   </select><br><br>
     City: <select formControlName="city_id">
-    <option value="0">Select City</option>
+    <option value="" disabled>Select City</option>
     <option *ngFor="let city of selectedCity" value={{city.id}}>{{city.name}}</option>
   </select><br><br>
-    Postal Code: <input type="text" placeholder="Enter Code" formControlName="postal_code"><br><br>
+    Postal Code: <input type="text" placeholder="Enter Code" formControlName="postal_code"><br>
+    <div *ngIf="postalValidation(locationForm.controls['postal_code'])">{{postalMessage}}</div><br><br>
     <button type="submit">{{ selectLocation ? 'Update' : 'Add'}}</button>
     <button type="reset" (click)="goPrev()">Cancel</button>
   </form>
@@ -65,4 +69,4 @@
   </tr>
 </table>
 
-<app-pagination (pageChange)="pageNumber = $event; getLocation()" (numberChange)="numChange($event)"></app-pagination>
+<app-pagination *ngIf="showTable" (pageChange)="pageNumber = $event; getLocation()" (numberChange)="numChange($event)"></app-pagination>

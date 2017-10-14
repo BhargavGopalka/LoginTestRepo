@@ -8,4 +8,5 @@ export class ApiEndpoints {
   public static Location = 'location';
   public static PhoneDetail = 'phoneDetail';
   public static Phone = 'phone';
+  public static SignIn = 'signin';
 }

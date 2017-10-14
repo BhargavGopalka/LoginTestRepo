@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {PhoneDetail} from './phoneDetail.model';
-import {AppServiceService} from '../app-service.service';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {AppServiceService} from '../utility/shared-services/app-service.service';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Organization} from '../organization/organization.model';
 import {Country} from '../country/country.model';
 import {State} from '../state-info/state.model';
@@ -18,11 +18,15 @@ export class PhoneDetailComponent implements OnInit {
   p = 1;
   tPage = null;
   pageItems = 20;
+  phoneMessage: string;
+  typeMessage: string;
+  orgMessage: string;
+  countryMessage: string;
+  postalMessage: string;
 
   showTable = true;
   showForm = false;
 
-  RecordsPerPage = [20, 50, 100, 150];
   numberList: PhoneDetail[] = [];
   organizationList: Organization[] = [];
   countryList: Country[] = [];
@@ -130,31 +134,79 @@ export class PhoneDetailComponent implements OnInit {
     }
   }
 
+  phoneValidation(control: AbstractControl) {
+    if (control.errors === null) {
+      return null;
+    } else if (control.errors.required) {
+      return this.phoneMessage = `Phone Number is required`;
+    } else if (control.errors.pattern) {
+      return this.phoneMessage = `It must be Number`;
+    } else if (control.value.length < 10) {
+      return this.phoneMessage = `Minimum 10 digits`;
+    } else if (control.value.length > 11) {
+      return this.phoneMessage = `Maximum 11 digits`;
+    }
+  }
+
+  typeValidation(control: AbstractControl) {
+    if (control.errors === null) {
+      return null;
+    } else if (control.errors.required) {
+      return this.typeMessage = `Must select a Phone type`;
+    }
+  }
+
+  orgValidation(control: AbstractControl) {
+    if (control.errors === null) {
+      return null;
+    } else if (control.errors.required) {
+      return this.orgMessage = `Must select a Organization`;
+    }
+  }
+
+  countryValidation(control: AbstractControl) {
+    if (control.errors === null) {
+      return null;
+    } else if (control.errors) {
+      return this.countryMessage = `Must select a Country`;
+    }
+  }
+
+  postalValidation(control: AbstractControl) {
+    if (control.errors === null) {
+      return null;
+    } else if (control.errors.pattern) {
+      return this.postalMessage = `It must be Numbers`;
+    }
+  }
+
   addNumber(formValue: any) {
-    if (this.selectNumber == null) {
-      // const url = `phone`;
-      this.appService.postAPI(ApiEndpoints.Phone, formValue)
-        .subscribe(() => {
-            this.getNumberDetail();
-            this.selectedState = [];
-            this.selectedCity = [];
-            this.showTable = true;
-            this.showForm = false;
-          },
-          msg => {
-            console.log(`Error: ${msg.status} ${msg.statusText}`);
-          });
-    } else {
-      // const url = `phone/${this.selectNumber.phone_id}`;
-      this.appService.putAPI(ApiEndpoints.Phone + `/${this.selectNumber.phone_id}`, formValue)
-        .subscribe(() => {
-            this.getNumberDetail();
-            this.showTable = true;
-            this.showForm = false;
-          },
-          msg => {
-            console.log(`Error: ${msg.status} ${msg.statusText}`);
-          });
+    if (this.numberForm.valid === true) {
+      if (this.selectNumber == null) {
+        // const url = `phone`;
+        this.appService.postAPI(ApiEndpoints.Phone, formValue)
+          .subscribe(() => {
+              this.getNumberDetail();
+              this.selectedState = [];
+              this.selectedCity = [];
+              this.showTable = true;
+              this.showForm = false;
+            },
+            msg => {
+              console.log(`Error: ${msg.status} ${msg.statusText}`);
+            });
+      } else {
+        // const url = `phone/${this.selectNumber.phone_id}`;
+        this.appService.putAPI(ApiEndpoints.Phone + `/${this.selectNumber.phone_id}`, formValue)
+          .subscribe(() => {
+              this.getNumberDetail();
+              this.showTable = true;
+              this.showForm = false;
+            },
+            msg => {
+              console.log(`Error: ${msg.status} ${msg.statusText}`);
+            });
+      }
     }
   }
 
@@ -168,15 +220,22 @@ export class PhoneDetailComponent implements OnInit {
 
   initial(numberData: any) {
     this.numberForm = this.fb.group({
-      phone_number: [numberData ? numberData.phone_number : ''],
-      phone_type_id: [numberData ? numberData.phone_list_id : ''],
-      org_id: [numberData ? numberData.org_id : ''],
-      country_id: [numberData ? numberData.country_id : ''],
+      phone_number: [numberData ? numberData.phone_number : '',
+        [
+          Validators.required,
+          Validators.pattern('[0-9]*'),
+          Validators.maxLength(10),
+          Validators.minLength(11)
+        ]
+      ],
+      phone_type_id: [numberData ? numberData.phone_list_id : '', Validators.required],
+      org_id: [numberData ? numberData.org_id : '', Validators.required],
+      country_id: [numberData ? numberData.country_id : '', Validators.required],
       state_id: [numberData ? numberData.state_id : ''],
       city_id: [numberData ? numberData.city_id : ''],
       street: [numberData ? numberData.street : ''],
-      postal_code: [numberData ? numberData.postal_code : ''],
-      isCrawl: [numberData ? numberData.isCrawl : ''],
+      postal_code: [numberData ? numberData.postal_code : '', Validators.pattern('[0-9]*')],
+      isCrawl: [numberData ? numberData.isCrawl : false],
     });
   }
 

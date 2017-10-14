@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Department} from './department.model';
-import {AppServiceService} from '../app-service.service';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {AppServiceService} from '../utility/shared-services/app-service.service';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ApiEndpoints} from '../api-endpoints';
 
 @Component({
@@ -14,6 +14,8 @@ export class DepartmentComponent implements OnInit {
   items = 20;
   pageNumber = 1;
   totalNumRecords: number;
+  orgMessage: string;
+  message: string;
 
   showTable = true;
   showForm = false;
@@ -48,9 +50,8 @@ export class DepartmentComponent implements OnInit {
   }
 
   getOrg() {
-
     // const url = `organization`;
-    this.appService.getAPI(ApiEndpoints.Department)
+    this.appService.getAPI(ApiEndpoints.Organization)
       .subscribe(res => {
         console.log(res);
         this.organizations = res.payload.data;
@@ -76,38 +77,56 @@ export class DepartmentComponent implements OnInit {
       });
   }
 
-  addDepartment(formValue: any) {
-    if (this.selectDepartment == null) {
-      // const url = `department`;
-      this.appService.postAPI(ApiEndpoints.Department, formValue)
-        .subscribe(res => {
-            console.log(res);
-            this.getDepartment();
-            this.showTable = true;
-            this.showForm = false;
-          },
-          msg => {
-            console.log(`Error: ${msg.status} ${msg.statusText}`);
-          });
+  OrgValidation(control: AbstractControl) {
+    if (control.errors) {
+      return this.orgMessage = `Must select Organization`;
     } else {
-      // const url = `department/${this.selectDepartment.id}`;
-      this.appService.putAPI(ApiEndpoints.Department + `/${this.selectDepartment.id}`, formValue)
-        .subscribe(res => {
-            console.log(res);
-            this.getDepartment();
-            this.showTable = true;
-            this.showForm = false;
-          },
-          msg => {
-            console.log(`Error: ${msg.status} ${msg.statusText}`);
-          });
+      return null;
+    }
+  }
+
+  depValidation(control: AbstractControl) {
+    if (control.errors) {
+      return this.message = `Department name required`;
+    } else {
+      return null;
+    }
+  }
+
+  addDepartment(formValue: any) {
+    if (this.departmentForm.valid === true) {
+      if (this.selectDepartment == null) {
+        // const url = `department`;
+        this.appService.postAPI(ApiEndpoints.Department, formValue)
+          .subscribe(res => {
+              console.log(res);
+              this.getDepartment();
+              this.showTable = true;
+              this.showForm = false;
+            },
+            msg => {
+              console.log(`Error: ${msg.status} ${msg.statusText}`);
+            });
+      } else {
+        // const url = `department/${this.selectDepartment.id}`;
+        this.appService.putAPI(ApiEndpoints.Department + `/${this.selectDepartment.id}`, formValue)
+          .subscribe(res => {
+              console.log(res);
+              this.getDepartment();
+              this.showTable = true;
+              this.showForm = false;
+            },
+            msg => {
+              console.log(`Error: ${msg.status} ${msg.statusText}`);
+            });
+      }
     }
   }
 
   initial(departmentData: any) {
     this.departmentForm = this.fb.group({
-      org_id: [departmentData ? departmentData.org_id : ''],
-      name: [departmentData ? departmentData.department : '']
+      org_id: [departmentData ? departmentData.org_id : '', Validators.required],
+      name: [departmentData ? departmentData.department : '', Validators.required]
     });
   }
 

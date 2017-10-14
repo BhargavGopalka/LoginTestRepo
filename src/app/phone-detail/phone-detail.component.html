@@ -3,40 +3,51 @@
 <fieldset *ngIf="showForm">
   <form [formGroup]="numberForm" (submit)="addNumber(numberForm.value)">
     <br><br>
-    Phone Number: <input type="text" placeholder="Phone Number" formControlName="phone_number"><br><br>
+    Phone Number: <input type="text" placeholder="Phone Number" formControlName="phone_number"><br>
+    <div *ngIf="phoneValidation(numberForm.controls['phone_number'])">{{phoneMessage}}</div>
+    <br><br>
 
     Select type: <select formControlName="phone_type_id">
+    <option value="" disabled>Select</option>
     <option value="1">Mobile</option>
     <option value="2">Phone</option>
     <option value="3">Fax</option>
-  </select><br><br>
+  </select><br>
+    <div *ngIf="typeValidation(numberForm.controls['phone_type_id'])">{{typeMessage}}</div>
+    <br><br>
 
     Organization: <select formControlName="org_id">
-    <option value="0">Select Organization</option>
+    <option value="" disabled>Select Organization</option>
     <option *ngFor="let org of organizationList" value={{org.id}}>{{org.name}}</option>
-  </select><br><br>
+  </select><br>
+    <div *ngIf="orgValidation(numberForm.controls['org_id'])">{{orgMessage}}</div>
+    <br><br>
 
     Country: <select formControlName="country_id" (change)="onSelectState($event.target.value)">
-    <option value="0">Select Country</option>
+    <option value="" disabled>Select Country</option>
     <option *ngFor="let country of countryList" value={{country.id}}>{{country.country}}</option>
-  </select><br><br>
+  </select><br>
+    <div *ngIf="countryValidation(numberForm.controls['country_id'])">{{countryMessage}}</div>
+    <br><br>
 
     State: <select formControlName="state_id" (change)="onSelectCity($event.target.value)">
-    <option value="0">Select State</option>
+    <option value="" disabled>Select State</option>
     <option *ngFor="let state of selectedState" value={{state.id}}>{{state.state}}</option>
   </select><br><br>
 
     City: <select formControlName="city_id">
-    <option value="0">Select City</option>
+    <option value="" disabled>Select City</option>
     <option *ngFor="let city of selectedCity" value={{city.id}}>{{city.name}}</option>
   </select><br><br>
 
     Street: <select formControlName="street">
-    <option value="0">Select Street</option>
+    <option value="" disabled>Select Street</option>
     <option *ngFor="let street of streetList" value="{{street.street}}">{{street.street}}</option>
   </select><br><br>
 
-    Postal Code: <input type="text" placeholder="Enter Code" formControlName="postal_code"><br><br>
+    Postal Code: <input type="text" placeholder="Enter Code" formControlName="postal_code"><br>
+    <div *ngIf="postalValidation(numberForm.controls['postal_code'])">{{postalMessage}}</div>
+    <br><br>
 
     Crawl Number: <input type="checkbox" formControlName="isCrawl"><br><br>
 
@@ -84,4 +95,5 @@
     </tr>
   </table>
 
-  <app-pagination (pageChange)="p = $event;getNumberDetail()" (numberChange)="onChange($event)"></app-pagination>
+  <app-pagination *ngIf="showTable" (pageChange)="p = $event;getNumberDetail()"
+                  (numberChange)="onChange($event)"></app-pagination>

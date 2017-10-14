@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {AppServiceService} from '../app-service.service';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AppServiceService} from '../utility/shared-services/app-service.service';
 import {Organization} from './organization.model';
 import {ApiEndpoints} from '../api-endpoints';
 
@@ -14,6 +14,7 @@ export class OrganizationComponent implements OnInit {
   p = 1;
   items = 20;
   totalNumRecords: number;
+  message: string;
 
   Organization: Organization[] = [];
 
@@ -58,31 +59,33 @@ export class OrganizationComponent implements OnInit {
   }
 
   addOrg(formVal: any) {
-    // this.dataForm = this.fb.group({
-    //   name: ['formVal']
-    // });
+    if (this.dataForm.valid === true) {
+      // this.dataForm = this.fb.group({
+      //   name: ['formVal']
+      // });
 
-    // const url = `organization`;
-    if (this.selectedOrg == null) {
-      this.appService.postAPI(ApiEndpoints.Organization, formVal)
-        .subscribe(res => {
-            console.log(res);
-            this.getOrg();
-            this.tableShow = true;
-            this.formShow = false;
-          },
-          msg => console.log(`Error: ${msg.status} ${msg.statusText}`));
-    } else {
-      this.appService.putAPI(ApiEndpoints.Organization + '/' + this.selectedOrg.id, formVal)
-        .subscribe(res => {
-            console.log(res);
-            // this.details.push(res.json().payload.data);
-            // console.log(this.details);
-            this.getOrg();
-            this.tableShow = true;
-            this.formShow = false;
-          },
-          msg => console.log(`Error: ${msg.status} ${msg.statusText}`));
+      // const url = `organization`;
+      if (this.selectedOrg == null) {
+        this.appService.postAPI(ApiEndpoints.Organization, formVal)
+          .subscribe(res => {
+              console.log(res);
+              this.getOrg();
+              this.tableShow = true;
+              this.formShow = false;
+            },
+            msg => console.log(`Error: ${msg.status} ${msg.statusText}`));
+      } else {
+        this.appService.putAPI(ApiEndpoints.Organization + '/' + this.selectedOrg.id, formVal)
+          .subscribe(res => {
+              console.log(res);
+              // this.details.push(res.json().payload.data);
+              // console.log(this.details);
+              this.getOrg();
+              this.tableShow = true;
+              this.formShow = false;
+            },
+            msg => console.log(`Error: ${msg.status} ${msg.statusText}`));
+      }
     }
   }
 
@@ -117,9 +120,17 @@ export class OrganizationComponent implements OnInit {
       });
   }
 
+  nameValidation(control: AbstractControl) {
+    if (control.errors) {
+      return this.message = `Name is Required.`;
+    } else {
+      return null;
+    }
+  }
+
   intialForm(orgData: any) {
     this.dataForm = this.fb.group({
-      name: [orgData ? orgData.name : '']
+      name: [orgData ? orgData.name : '', Validators.required]
     });
   }
 

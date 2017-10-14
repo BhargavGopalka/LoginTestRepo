@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {AppServiceService} from '../app-service.service';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AppServiceService} from '../utility/shared-services/app-service.service';
 import {State} from './state.model';
 import {ApiEndpoints} from '../api-endpoints';
 
@@ -15,6 +15,8 @@ export class StateInfoComponent implements OnInit {
   items = 20;
   pageNumber = 1;
   totalNumRecords: number;
+  message: string;
+  messageCountry: string;
 
   stateList: State[] = [];
   countries = [];
@@ -80,37 +82,38 @@ export class StateInfoComponent implements OnInit {
   }
 
   addState(formValue: any) {
-    //
-    // const header = new Headers();
-    // header.append('Authorization', sessionStorage.getItem('currentUser'));
-    //
-    // const option = new RequestOptions();
-    // option.headers = header;
-    //
-    if (this.selectState == null) {
-      // const url = `state`;
-      this.appService.postAPI(ApiEndpoints.State, formValue)
-        .subscribe(res => {
-            console.log(res);
-            this.getState();
-            this.showTable = true;
-            this.showForm = false;
-          },
-          msg => {
-            console.log(`Error: ${msg.status} ${msg.statusText}`);
-          });
-    } else {
-      // const anotherUrl = `state/${this.selectState.id}`;
-      this.appService.putAPI(ApiEndpoints.State + `/${this.selectState.id}`, formValue)
-        .subscribe(res => {
-            console.log(res);
-            this.getState();
-            this.showTable = true;
-            this.showForm = false;
-          },
-          msg => {
-            console.log(`Error: ${msg.status} ${msg.statusText}`);
-          });
+    if (this.stateForm.valid === true) {
+      // const header = new Headers();
+      // header.append('Authorization', sessionStorage.getItem('currentUser'));
+      //
+      // const option = new RequestOptions();
+      // option.headers = header;
+      //
+      if (this.selectState == null) {
+        // const url = `state`;
+        this.appService.postAPI(ApiEndpoints.State, formValue)
+          .subscribe(res => {
+              console.log(res);
+              this.getState();
+              this.showTable = true;
+              this.showForm = false;
+            },
+            msg => {
+              console.log(`Error: ${msg.status} ${msg.statusText}`);
+            });
+      } else {
+        // const anotherUrl = `state/${this.selectState.id}`;
+        this.appService.putAPI(ApiEndpoints.State + `/${this.selectState.id}`, formValue)
+          .subscribe(res => {
+              console.log(res);
+              this.getState();
+              this.showTable = true;
+              this.showForm = false;
+            },
+            msg => {
+              console.log(`Error: ${msg.status} ${msg.statusText}`);
+            });
+      }
     }
   }
 
@@ -124,6 +127,21 @@ export class StateInfoComponent implements OnInit {
       });
   }
 
+  countryValidation(control: AbstractControl) {
+    if (control.errors) {
+      return this.messageCountry = `Must select Country`;
+    } else {
+      return null;
+    }
+  }
+
+  stateValidation(control: AbstractControl) {
+    if (control.errors) {
+      return this.message = `State name required`;
+    } else {
+      return null;
+    }
+  }
 
   // removeState( id: number, index: number) {
   //
@@ -142,8 +160,8 @@ export class StateInfoComponent implements OnInit {
 
   initial(stateData: any) {
     this.stateForm = this.fb.group({
-      country_id: [stateData ? stateData.country_id : ''],
-      state: [stateData ? stateData.state : ''],
+      country_id: [stateData ? stateData.country_id : '', Validators.required],
+      state: [stateData ? stateData.state : '', Validators.required],
       code: [stateData ? stateData.code : '']
     });
   }

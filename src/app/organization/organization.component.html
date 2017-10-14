@@ -5,7 +5,9 @@
     <form [formGroup]="dataForm" (submit)="addOrg(dataForm.value)">
       <br>
       Organization Name:
-      <input type="text" placeholder="Name" formControlName="name"><br><br>
+      <input type="text" placeholder="Name" formControlName="name"><br>
+      <div *ngIf="nameValidation(dataForm.controls['name'])">{{message}}</div>
+      <br><br>
       <button type="submit">{{selectedOrg ? 'Update' : 'Add'}}</button>
       <button type="reset" (click)="goPrev()">Cancel</button>
       <br>

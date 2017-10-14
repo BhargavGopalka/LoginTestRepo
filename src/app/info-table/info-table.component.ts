@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {Headers, Http, RequestOptions} from '@angular/http';
 import {Router} from '@angular/router';
+import {ApiEndpoints} from '../api-endpoints';
+import {AppServiceService} from '../utility/shared-services/app-service.service';
 
 @Component({
   selector: 'app-info-table',
@@ -13,7 +14,7 @@ export class InfoTableComponent implements OnInit {
 
   today = Date.now();
 
-  constructor(private http: Http, private routes: Router) {
+  constructor(private apiService: AppServiceService, private routes: Router) {
   }
 
   ngOnInit() {
@@ -21,15 +22,10 @@ export class InfoTableComponent implements OnInit {
   }
 
   doHeader() {
-    const header = new Headers();
-    header.append('Authorization', sessionStorage.getItem('currentUser'));
-    const option = new RequestOptions();
-    option.headers = header;
-    const url = `https://mvp-dev-extensionsapi.visumenu.com/phoneDetail?pageNumber=1&recordsPerPage=3&totalPage=0&sortBy=phone_number&sortOrder=asc`;
-    this.http.get(url, option)
+    this.apiService.getAPI(ApiEndpoints.PhoneDetail)
       .subscribe(res => {
 
-          this.details = res.json().payload.data;
+          this.details = res.payload.data;
 
           // const response = res.json();
           // const path = response.payload.data;

@@ -5,7 +5,9 @@
   <fieldset>
     <br>
     <form [formGroup]="countryForm" (submit)="addCountry(countryForm.value)">
-      Country Name:<input type="text" placeholder="Name" formControlName="country"><br><br>
+      Country Name:<input type="text" placeholder="Name" formControlName="country"><br>
+      <div *ngIf="nameValidation(countryForm.controls['country'])">{{message}}</div>
+      <br><br>
       Country Code:<input type="text" placeholder="Country Code" formControlName="code"><br><br>
       Dialing Code:<input type="text" placeholder="Dialing Code" formControlName="dialing_code"><br><br>
       <br><br>
@@ -49,6 +51,7 @@
     </tr>
   </table>
 
-<app-pagination (pageChange)="pageNumber = $event; getCountry()" (numberChange)="recordChange($event)"></app-pagination>
+  <app-pagination *ngIf="tableShow" (pageChange)="pageNumber = $event; getCountry()"
+                  (numberChange)="recordChange($event)"></app-pagination>
 
 </div>

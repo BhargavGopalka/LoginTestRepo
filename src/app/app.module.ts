@@ -10,7 +10,7 @@ import {LoginUserComponent} from './login-user/login-user.component';
 import {OrganizationComponent} from './organization/organization.component';
 import {CountryComponent} from './country/country.component';
 import {StateInfoComponent} from './state-info/state-info.component';
-import {AppServiceService} from './app-service.service';
+import {AppServiceService} from './utility/shared-services/app-service.service';
 import {DepartmentComponent} from './department/department.component';
 import {CityComponent} from './city/city.component';
 import {LocationComponent} from './location/location.component';
@@ -20,9 +20,10 @@ import {AuthGuard, SaveDataGuard} from './auth.guard';
 import {OrganizationDataComponent} from './organization-data/organization-data.component';
 import {CountryDataComponent} from './country-data/country-data.component';
 import {NgxPaginationModule} from 'ngx-pagination';
-import { PaginationComponent } from './pagination/pagination.component';
-import { BoldPipePipe } from './bold-pipe.pipe';
-import { SideBarComponent } from './side-bar/side-bar.component';
+import {PaginationComponent} from './pagination/pagination.component';
+import {BoldPipePipe} from './bold-pipe.pipe';
+import {SideBarComponent} from './side-bar/side-bar.component';
+import {UtilityModule} from './utility/utility.module';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { SideBarComponent } from './side-bar/side-bar.component';
     FormsModule,
     ReactiveFormsModule,
     NgxPaginationModule,
+    UtilityModule,
     AppRoutingModule
   ],
   providers: [AppServiceService, AuthGuard, SaveDataGuard],

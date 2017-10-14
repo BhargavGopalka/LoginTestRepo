@@ -5,7 +5,9 @@
     <form [formGroup]="appForm" (submit)="addApp(appForm.value)">
       <br>
       App:
-      <input type="text" placeholder="Enter Url" formControlName="url"><br><br>
+      <input type="text" placeholder="Enter Url" formControlName="url"><br>
+      <div *ngIf="urlValidation(appForm.controls['url'])">{{urlMessage}}</div>
+      <br><br>
       Description:
       <input type="text" placeholder="Enter Description" formControlName="description"><br><br>
       <button type="submit">{{selectApp ? 'Update' : 'Add'}}</button>
@@ -46,4 +48,5 @@
   </table>
 </div>
 
-<app-pagination (pageChange)="pageNumber = $event;getApp()" (numberChange)="numChange($event)"></app-pagination>
+<app-pagination *ngIf="tableShow" (pageChange)="pageNumber = $event;getApp()"
+                (numberChange)="numChange($event)"></app-pagination>

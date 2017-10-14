@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AppServiceService} from '../app-service.service';
-import {VALID} from "@angular/forms/src/model";
+import {AppServiceService} from '../utility/shared-services/app-service.service';
+import {ApiEndpoints} from '../api-endpoints';
 
 @Component({
   selector: 'app-login-user',
@@ -61,8 +61,7 @@ export class LoginUserComponent implements OnInit {
 
   login(formValue: any) {
     if (this.loginForm.valid === true) {
-      const url = `signin`;
-      this.appService.postAPI(url, formValue)
+      this.appService.postAPI(ApiEndpoints.SignIn, formValue)
         .subscribe(res => {
           console.log(res);
           const response = res;

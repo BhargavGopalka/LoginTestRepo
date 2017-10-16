@@ -3,7 +3,7 @@ import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/form
 import {Country} from './country.model';
 import {AppServiceService} from '../utility/shared-services/app-service.service';
 import {Headers, Http, RequestOptions} from '@angular/http';
-import {ApiEndpoints} from "../api-endpoints";
+import {ApiEndpoints} from "../utility/constants/api-endpoints";
 
 @Component({
   selector: 'app-country',

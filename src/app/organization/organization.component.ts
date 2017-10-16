@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AppServiceService} from '../utility/shared-services/app-service.service';
 import {Organization} from './organization.model';
-import {ApiEndpoints} from '../api-endpoints';
+import {ApiEndpoints} from '../utility/constants/api-endpoints';
 
 @Component({
   selector: 'app-organization',

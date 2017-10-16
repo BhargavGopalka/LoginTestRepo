@@ -4,7 +4,7 @@
   <form [formGroup]="stateForm" (submit)="addState(stateForm.value)">
     Country: <select formControlName="country_id">
     <option value="" disabled>Select Country</option>
-    <option *ngFor="let country of countries" value={{country.id}}>{{country.country}}</option>
+    <option *ngFor="let country of countryList" value={{country.id}}>{{country.country}}</option>
   </select><br>
     <div *ngIf="countryValidation(stateForm.controls['country_id'])">{{messageCountry}}</div>
     <br><br>

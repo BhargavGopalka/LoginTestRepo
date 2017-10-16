@@ -5,7 +5,8 @@ import {AppServiceService} from '../utility/shared-services/app-service.service'
 import 'rxjs/add/operator/filter';
 import {State} from '../state-info/state.model';
 import {City} from '../city/city.model';
-import {ApiEndpoints} from '../api-endpoints';
+import {ApiEndpoints} from '../utility/constants/api-endpoints';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-location',
@@ -36,10 +37,11 @@ export class LocationComponent implements OnInit {
   locationForm: FormGroup;
   selectLocation = null;
 
-  constructor(private fb: FormBuilder, private appService: AppServiceService) {
+  constructor(private fb: FormBuilder, private appService: AppServiceService, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
+    this.countryList = this.route.snapshot.data['countryList'].payload.data;
     this.getLocation();
   }
 
@@ -173,14 +175,14 @@ export class LocationComponent implements OnInit {
       });
   }
 
-  getCountry() {
-    // const url = `country`;
-    this.appService.getAPI(ApiEndpoints.Country)
-      .subscribe(res => {
-        console.log(res);
-        this.countryList = res.payload.data;
-      });
-  }
+  // getCountry() {
+  //   // const url = `country`;
+  //   this.appService.getAPI(ApiEndpoints.Country)
+  //     .subscribe(res => {
+  //       console.log(res);
+  //       this.countryList = res.payload.data;
+  //     });
+  // }
 
   getCity() {
     // const url = `city`;
@@ -215,6 +217,6 @@ export class LocationComponent implements OnInit {
     this.getState();
     this.getOrg();
     this.getCity();
-    this.getCountry();
+    // this.getCountry();
   }
 }

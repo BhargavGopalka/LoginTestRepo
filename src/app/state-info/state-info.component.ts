@@ -2,7 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AppServiceService} from '../utility/shared-services/app-service.service';
 import {State} from './state.model';
-import {ApiEndpoints} from '../api-endpoints';
+import {ApiEndpoints} from '../utility/constants/api-endpoints';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-state-info',
@@ -19,18 +20,21 @@ export class StateInfoComponent implements OnInit {
   messageCountry: string;
 
   stateList: State[] = [];
-  countries = [];
+  // countries = [];
 
   showTable = true;
   showForm = false;
 
   stateForm: FormGroup;
   selectState = null;
+  countryList: any;
 
-  constructor(private fb: FormBuilder, private appService: AppServiceService) {
+  constructor(private fb: FormBuilder, private appService: AppServiceService, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
+    console.log(this.route.snapshot.data['countryList'].payload.data);
+    this.countryList = this.route.snapshot.data['countryList'].payload.data;
     this.getState();
   }
 
@@ -117,15 +121,16 @@ export class StateInfoComponent implements OnInit {
     }
   }
 
-  getCountries() {
 
-    // const url = `country`;
-    this.appService.getAPI(ApiEndpoints.Country)
-      .subscribe(res => {
-        console.log(res);
-        this.countries = res.payload.data;
-      });
-  }
+  // getCountries() {
+  //
+  //   // const url = `country`;
+  //   this.appService.getAPI(ApiEndpoints.Country)
+  //     .subscribe(res => {
+  //       console.log(res);
+  //       this.countries = res.payload.data;
+  //     });
+  // }
 
   countryValidation(control: AbstractControl) {
     if (control.errors) {
@@ -176,7 +181,7 @@ export class StateInfoComponent implements OnInit {
     this.showTable = false;
     this.initial(stateData);
     this.selectState = stateData;
-    this.getCountries();
+    // this.getCountries();
   }
 
 }

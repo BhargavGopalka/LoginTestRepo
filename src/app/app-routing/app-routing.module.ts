@@ -13,6 +13,7 @@ import {PhoneDetailComponent} from '../phone-detail/phone-detail.component';
 import {AuthGuard, SaveDataGuard} from '../auth.guard';
 import {OrganizationDataComponent} from '../organization-data/organization-data.component';
 import {CountryDataComponent} from '../country-data/country-data.component';
+import {Resolver} from "../resolve";
 
 export const routes: Routes = [
   {
@@ -69,7 +70,10 @@ export const routes: Routes = [
   {
     path: 'infoTable/location',
     component: LocationComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    resolve: {
+      countryList: Resolver
+    }
   },
   {
     path: 'orgData',
@@ -118,12 +122,18 @@ export const routes: Routes = [
   {
     path: 'phone',
     component: PhoneDetailComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    resolve: {
+      countryList: Resolver
+    }
   },
   {
     path: 'infoTable/phone',
     component: PhoneDetailComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    resolve: {
+      countryList: Resolver
+    }
   },
   {
     path: 'infoTable/application',
@@ -133,12 +143,18 @@ export const routes: Routes = [
   {
     path: 'state',
     component: StateInfoComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    resolve: {
+      countryList: Resolver
+    }
   },
   {
     path: 'infoTable/state',
     component: StateInfoComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    resolve: {
+    countryList: Resolver
+  }
   }
 ];
 

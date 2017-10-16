@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {ApiEndpoints} from '../api-endpoints';
+import {ApiEndpoints} from '../utility/constants/api-endpoints';
 import {AppServiceService} from '../utility/shared-services/app-service.service';
 
 @Component({

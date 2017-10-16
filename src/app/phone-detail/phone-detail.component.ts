@@ -7,7 +7,8 @@ import {Country} from '../country/country.model';
 import {State} from '../state-info/state.model';
 import {City} from '../city/city.model';
 import {Location} from '../location/location.model';
-import {ApiEndpoints} from '../api-endpoints';
+import {ApiEndpoints} from '../utility/constants/api-endpoints';
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-phone-detail',
@@ -39,10 +40,11 @@ export class PhoneDetailComponent implements OnInit {
   numberForm: FormGroup;
   selectNumber = null;
 
-  constructor(private appService: AppServiceService, private fb: FormBuilder) {
+  constructor(private appService: AppServiceService, private fb: FormBuilder, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
+    this.countryList = this.route.snapshot.data['countryList'].payload.data;
     this.firstFunction();
   }
 
@@ -75,16 +77,16 @@ export class PhoneDetailComponent implements OnInit {
     }
   }
 
-  getCountry() {
-    if (this.countryList.length === 0) {
-      // const url = `country`;
-      this.appService.getAPI(ApiEndpoints.Country)
-        .subscribe(res => {
-          // console.log(res);
-          this.countryList = res.payload.data;
-        });
-    }
-  }
+  // getCountry() {
+  //   if (this.countryList.length === 0) {
+  //     // const url = `country`;
+  //     this.appService.getAPI(ApiEndpoints.Country)
+  //       .subscribe(res => {
+  //         // console.log(res);
+  //         this.countryList = res.payload.data;
+  //       });
+  //   }
+  // }
 
   getState() {
     if (this.stateList.length === 0) {
@@ -257,7 +259,7 @@ export class PhoneDetailComponent implements OnInit {
     this.getOrg();
     this.getState();
     this.getCity();
-    this.getCountry();
+    // this.getCountry();
     this.getStreet();
     this.getNumberDetail();
   }

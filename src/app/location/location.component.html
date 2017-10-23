@@ -12,7 +12,7 @@
     <div *ngIf="orgValidation(locationForm.controls['org_id'])">{{orgMessage}}</div><br><br>
     Country: <select formControlName="country_id" (change)="onSelectState($event.target.value)">
     <option value="" disabled>Select Country</option>
-    <option *ngFor="let country of countryList" value={{country.id}}>{{country.country}}</option>
+    <option *ngFor="let country of countryLists" value={{country.id}}>{{country.country}}</option>
   </select><br>
     <div *ngIf="countryValidation(locationForm.controls['country_id'])">{{countryMessage}}</div><br><br>
     State: <select formControlName="state_id" (change)="onSelectCity($event.target.value)">

@@ -26,7 +26,7 @@ export class LocationComponent implements OnInit {
   locationList: Location[] = [];
   stateList: State[];
   organizationList = [];
-  countryList = [];
+  countryLists = [];
   cityList: City[] = [];
   selectedState: State[] = [];
   selectedCity: City[] = [];
@@ -41,7 +41,7 @@ export class LocationComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.countryList = this.route.snapshot.data['countryList'].payload.data;
+    this.countryLists = this.route.snapshot.data['countryList'].payload.data;
     this.getLocation();
   }
 

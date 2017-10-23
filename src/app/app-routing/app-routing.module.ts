@@ -13,7 +13,7 @@ import {PhoneDetailComponent} from '../phone-detail/phone-detail.component';
 import {AuthGuard, SaveDataGuard} from '../auth.guard';
 import {OrganizationDataComponent} from '../organization-data/organization-data.component';
 import {CountryDataComponent} from '../country-data/country-data.component';
-import {Resolver} from "../resolve";
+import {Resolver} from '../resolve';
 
 export const routes: Routes = [
   {
@@ -21,6 +21,10 @@ export const routes: Routes = [
     redirectTo: 'login',
     pathMatch: 'full',
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'test',
+    loadChildren: 'app/test-module/test-module.module#TestModuleModule'
   },
   {
     path: 'login',
@@ -42,78 +46,84 @@ export const routes: Routes = [
     component: OrganizationComponent,
     canActivate: [AuthGuard]
   },
-  {
-    path: 'infoTable/organization',
-    component: OrganizationComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'infoTable/login',
-    component: LoginUserComponent,
-    canActivate: [AuthGuard]
-  },
+  // {
+  //   path: 'infoTable/organization',
+  //   component: OrganizationComponent,
+  //   canActivate: [AuthGuard]
+  // },
+  // {
+  //   path: 'infoTable/login',
+  //   component: LoginUserComponent,
+  //   canActivate: [AuthGuard]
+  // },
   {
     path: 'city',
     component: CityComponent,
     canActivate: [AuthGuard]
   },
-  {
-    path: 'infoTable/city',
-    component: CityComponent,
-    canActivate: [AuthGuard]
-  },
+  // {
+  //   path: 'infoTable/city',
+  //   component: CityComponent,
+  //   canActivate: [AuthGuard]
+  // },
   {
     path: 'location',
-    component: LocationComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'infoTable/location',
     component: LocationComponent,
     canActivate: [AuthGuard],
     resolve: {
       countryList: Resolver
     }
   },
+  // {
+  //   path: 'infoTable/location',
+  //   component: LocationComponent,
+  //   canActivate: [AuthGuard],
+  //   resolve: {
+  //     countryList: Resolver
+  //   }
+  // },
   {
     path: 'orgData',
     component: OrganizationDataComponent,
     canActivate: [AuthGuard],
     canDeactivate: [SaveDataGuard]
   },
-  {
-    path: 'infoTable/orgData',
-    component: OrganizationDataComponent,
-    canActivate: [AuthGuard],
-    canDeactivate: [SaveDataGuard]
-  },
+  // {
+  //   path: 'infoTable/orgData',
+  //   component: OrganizationDataComponent,
+  //   canActivate: [AuthGuard],
+  //   canDeactivate: [SaveDataGuard]
+  // },
   {
     path: 'countryData',
     component: CountryDataComponent,
     canActivate: [AuthGuard],
     canDeactivate: [SaveDataGuard]
   },
-  {
-    path: 'infoTable/countryData',
-    component: CountryDataComponent,
-    canActivate: [AuthGuard],
-    canDeactivate: [SaveDataGuard]
-  },
-  {
-    path: 'infoTable/department',
-    component: DepartmentComponent,
-    canActivate: [AuthGuard]
-  },
+  // {
+  //   path: 'infoTable/countryData',
+  //   component: CountryDataComponent,
+  //   canActivate: [AuthGuard],
+  //   canDeactivate: [SaveDataGuard]
+  // },
+  // {
+  //   path: 'infoTable/department',
+  //   component: DepartmentComponent,
+  //   canActivate: [AuthGuard]
+  // },
   {
     path: 'country',
     component: CountryComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    resolve: {
+      countryList: Resolver
+    }
   },
-  {
-    path: 'infoTable/country',
-    component: CountryComponent,
-    canActivate: [AuthGuard]
-  },
+  // {
+  //   path: 'infoTable/country',
+  //   component: CountryComponent,
+  //   canActivate: [AuthGuard]
+  // },
   {
     path: 'application',
     component: ApplicationComponent,
@@ -127,19 +137,19 @@ export const routes: Routes = [
       countryList: Resolver
     }
   },
-  {
-    path: 'infoTable/phone',
-    component: PhoneDetailComponent,
-    canActivate: [AuthGuard],
-    resolve: {
-      countryList: Resolver
-    }
-  },
-  {
-    path: 'infoTable/application',
-    component: ApplicationComponent,
-    canActivate: [AuthGuard]
-  },
+  // {
+  //   path: 'infoTable/phone',
+  //   component: PhoneDetailComponent,
+  //   canActivate: [AuthGuard],
+  //   resolve: {
+  //     countryList: Resolver
+  //   }
+  // },
+  // {
+  //   path: 'infoTable/application',
+  //   component: ApplicationComponent,
+  //   canActivate: [AuthGuard]
+  // },
   {
     path: 'state',
     component: StateInfoComponent,
@@ -148,14 +158,14 @@ export const routes: Routes = [
       countryList: Resolver
     }
   },
-  {
-    path: 'infoTable/state',
-    component: StateInfoComponent,
-    canActivate: [AuthGuard],
-    resolve: {
-    countryList: Resolver
-  }
-  }
+  // {
+  //   path: 'infoTable/state',
+  //   component: StateInfoComponent,
+  //   canActivate: [AuthGuard],
+  //   resolve: {
+  //     countryList: Resolver
+  //   }
+  // }
 ];
 
 @NgModule({

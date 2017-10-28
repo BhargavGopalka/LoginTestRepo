@@ -3,13 +3,15 @@ import {Headers, Http, RequestOptions} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {Constant} from '../constants/constants';
+import {ChildService} from "../child/child.service";
 
 @Injectable()
-export class AppServiceService {
+export class AppServiceService extends ChildService {
 
   // baseUrl = `https://mvp-dev-extensionsapi.visumenu.com/`;
 
   constructor(private http: Http) {
+    super();
   }
 
   /* GET API - read only, get all records */

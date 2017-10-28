@@ -1,14 +1,15 @@
 import {Component, OnInit} from '@angular/core';
 import {PhoneDetail} from './phoneDetail.model';
 import {AppServiceService} from '../utility/shared-services/app-service.service';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, Validators, FormArray, FormControl} from '@angular/forms';
 import {Organization} from '../organization/organization.model';
 import {Country} from '../country/country.model';
 import {State} from '../state-info/state.model';
 import {City} from '../city/city.model';
 import {Location} from '../location/location.model';
 import {ApiEndpoints} from '../utility/constants/api-endpoints';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute} from '@angular/router';
+import index from "@angular/cli/lib/cli";
 
 @Component({
   selector: 'app-phone-detail',
@@ -237,8 +238,25 @@ export class PhoneDetailComponent implements OnInit {
       city_id: [numberData ? numberData.city_id : ''],
       street: [numberData ? numberData.street : ''],
       postal_code: [numberData ? numberData.postal_code : '', Validators.pattern('[0-9]*')],
+      department: new FormArray([this.departFormArray()]),
       isCrawl: [numberData ? numberData.isCrawl : false],
     });
+  }
+
+  departFormArray() {
+    return this.fb.group({
+      deptId: new FormControl(''),
+      dept: new FormControl(''),
+      extension: new FormControl(''),
+    });
+  }
+
+  onAddDept() {
+    (<FormArray>this.numberForm.get('department')).push(this.departFormArray());
+  }
+
+  onRemoveDept(i: number) {
+    (<FormArray>this.numberForm.get('department')).removeAt(i);
   }
 
   goPrev() {

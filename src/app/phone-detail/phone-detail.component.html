@@ -49,6 +49,39 @@
     <div *ngIf="postalValidation(numberForm.controls['postal_code'])">{{postalMessage}}</div>
     <br><br>
 
+    <!--Departments-->
+    <fieldset>
+      <div formArrayName="department">
+        <div *ngFor="let depart of numberForm.get('department').controls; let i=index">
+          <div>
+            Department #{{ i + 1 }}
+          </div>
+
+          <div [formGroupName]="i">
+
+            <div>
+              <input type="hidden" formControlName="deptId">
+            </div>
+
+            <div>
+              <label>Department: </label>
+              <input type="text" placeholder="Select Department" formControlName="dept">
+            </div>
+            <br>
+
+            <div>
+              <label>Extension: </label>
+              <input type="text" placeholder="Enter Extension" formControlName="extension">
+            </div><br>
+
+            <button type="button" (click)="onAddDept()">Add Departments</button>
+            <button type="button" (click)="onRemoveDept()">Remove Departments</button>
+
+          </div>
+        </div>
+      </div>
+    </fieldset><br><br>
+
     Crawl Number: <input type="checkbox" formControlName="isCrawl"><br><br>
 
     <button type="submit">{{ selectNumber ? 'Update' : 'Add'}}</button>

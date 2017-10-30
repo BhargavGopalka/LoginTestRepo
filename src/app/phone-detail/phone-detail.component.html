@@ -1,7 +1,7 @@
 <button (click)="showProperty(null)">Add</button>
 <br><br>
 <fieldset *ngIf="showForm">
-  <form [formGroup]="numberForm" (submit)="addNumber(numberForm.value)">
+  <form [formGroup]="numberForm" (submit)="addNumber(numberForm.value, numberForm.valid)">
     <br><br>
     Phone Number: <input type="text" placeholder="Phone Number" formControlName="phone_number"><br>
     <div *ngIf="phoneValidation(numberForm.controls['phone_number'])">{{phoneMessage}}</div>
@@ -60,12 +60,17 @@
           <div [formGroupName]="i">
 
             <div>
-              <input type="hidden" formControlName="deptId">
-            </div>
-
-            <div>
               <label>Department: </label>
-              <input type="text" placeholder="Select Department" formControlName="dept">
+              <select formControlName="dept">
+                <option value="" disabled>Select Department</option>
+                <option *ngFor="let depart of departmentList" value={{depart.id}} id="{{'deptId' + i}}">{{depart.department}}</option>
+              </select>
+
+              <!--<div>-->
+                <!--<input type="hidden"  formControlName="deptId" value={{departID}} >-->
+              <!--</div>-->
+
+              <!--<input type="text" placeholder="Select Department" formControlName="dept">-->
             </div>
             <br>
 
@@ -74,11 +79,12 @@
               <input type="text" placeholder="Enter Extension" formControlName="extension">
             </div><br>
 
-            <button type="button" (click)="onAddDept()">Add Departments</button>
-            <button type="button" (click)="onRemoveDept()">Remove Departments</button>
+
+            <button *ngIf="showRemoveButton" type="button" (click)="onRemoveDept(i)">Remove Departments</button><br><br>
 
           </div>
         </div>
+        <button type="button" (click)="onAddDept()">Add Departments</button>
       </div>
     </fieldset><br><br>
 

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {PhoneDetail} from './phoneDetail.model';
 import {AppServiceService} from '../utility/shared-services/app-service.service';
-import {AbstractControl, FormBuilder, FormGroup, Validators, FormArray, FormControl} from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Organization} from '../organization/organization.model';
 import {Country} from '../country/country.model';
 import {State} from '../state-info/state.model';
@@ -9,7 +9,7 @@ import {City} from '../city/city.model';
 import {Location} from '../location/location.model';
 import {ApiEndpoints} from '../utility/constants/api-endpoints';
 import {ActivatedRoute} from '@angular/router';
-import index from "@angular/cli/lib/cli";
+import {Department} from '../department/department.model';
 
 @Component({
   selector: 'app-phone-detail',
@@ -25,9 +25,11 @@ export class PhoneDetailComponent implements OnInit {
   orgMessage: string;
   countryMessage: string;
   postalMessage: string;
+  departID: number = null;
 
   showTable = true;
   showForm = false;
+  showRemoveButton = false;
 
   numberList: PhoneDetail[] = [];
   organizationList: Organization[] = [];
@@ -37,6 +39,8 @@ export class PhoneDetailComponent implements OnInit {
   selectedCity: City[] = [];
   cityList: City[] = [];
   streetList: Location[] = [];
+  departmentList: Department[] = [];
+  // selectedDept: Department[] = [];
 
   numberForm: FormGroup;
   selectNumber = null;
@@ -65,6 +69,28 @@ export class PhoneDetailComponent implements OnInit {
         this.tPage = res.pager.totalRecords;
         this.numberList = res.payload.data;
       });
+  }
+
+  getDept() {
+    // debugger;
+    if (this.departmentList.length === 0) {
+      this.appService.getAPI(ApiEndpoints.Department + `?records=all`)
+        .subscribe(res => {
+          this.departmentList = res.payload.data;
+        });
+    }
+    console.log(this.departmentList);
+  }
+
+  onSelectDepartment(value) {
+    // debugger;
+    console.log(value);
+    this.departID = value;
+    console.log(this.departID);
+    // this.selectedDept = this.departmentList.filter(depart => {
+    //   return depart.id === value;
+    // });
+    // console.log(this.selectedDept);
   }
 
   getOrg() {
@@ -183,10 +209,11 @@ export class PhoneDetailComponent implements OnInit {
     }
   }
 
-  addNumber(formValue: any) {
+  addNumber(formValue: any, isValid: boolean) {
     if (this.numberForm.valid === true) {
       if (this.selectNumber == null) {
-        // const url = `phone`;
+        formValue.department = JSON.stringify(formValue.department);
+        console.log(formValue.department);
         this.appService.postAPI(ApiEndpoints.Phone, formValue)
           .subscribe(() => {
               this.getNumberDetail();
@@ -227,8 +254,8 @@ export class PhoneDetailComponent implements OnInit {
         [
           Validators.required,
           Validators.pattern('[0-9]*'),
-          Validators.maxLength(10),
-          Validators.minLength(11)
+          Validators.maxLength(11),
+          Validators.minLength(10)
         ]
       ],
       phone_type_id: [numberData ? numberData.phone_list_id : '', Validators.required],
@@ -238,21 +265,22 @@ export class PhoneDetailComponent implements OnInit {
       city_id: [numberData ? numberData.city_id : ''],
       street: [numberData ? numberData.street : ''],
       postal_code: [numberData ? numberData.postal_code : '', Validators.pattern('[0-9]*')],
-      department: new FormArray([this.departFormArray()]),
+      department: this.fb.array([this.departFormArray()]),
       isCrawl: [numberData ? numberData.isCrawl : false],
     });
   }
 
   departFormArray() {
     return this.fb.group({
-      deptId: new FormControl(''),
+      // deptId: new FormControl(''),
       dept: new FormControl(''),
-      extension: new FormControl(''),
+      extension: new FormControl('')
     });
   }
 
   onAddDept() {
     (<FormArray>this.numberForm.get('department')).push(this.departFormArray());
+    this.showRemoveButton = true;
   }
 
   onRemoveDept(i: number) {
@@ -274,6 +302,7 @@ export class PhoneDetailComponent implements OnInit {
   }
 
   firstFunction() {
+    this.getDept();
     this.getOrg();
     this.getState();
     this.getCity();

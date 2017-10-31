@@ -4,13 +4,15 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {Constant} from '../constants/constants';
 import {ChildService} from '../child/child.service';
+import {ToastrService} from 'ngx-toastr';
 
 @Injectable()
 export class AppServiceService extends ChildService {
 
   // baseUrl = `https://mvp-dev-extensionsapi.visumenu.com/`;
 
-  constructor(private http: Http) {
+  constructor(private http: Http,
+              private toastr: ToastrService) {
     super();
   }
 
@@ -18,6 +20,7 @@ export class AppServiceService extends ChildService {
   getAPI(endpoint: string): Observable<any> {
     return this.http.get(Constant.baseUrl + endpoint, this.Headers)
       .map(res => {
+        this.extractData(res.json(), false);
         return res.json();
       });
   }
@@ -26,6 +29,7 @@ export class AppServiceService extends ChildService {
   deleteAPI(endpoint: string): Observable<any> {
     return this.http.delete(Constant.baseUrl + endpoint, this.Headers)
       .map(res => {
+        this.extractData(res.json(), true);
         return res.json();
       });
   }
@@ -34,6 +38,7 @@ export class AppServiceService extends ChildService {
   postAPI(endpoint: string, formVal: any): Observable<any> {
     return this.http.post(Constant.baseUrl + endpoint, formVal, this.Headers)
       .map(res => {
+        this.extractData(res.json(), true);
         return res.json();
       });
   }
@@ -42,6 +47,7 @@ export class AppServiceService extends ChildService {
   putAPI(endpoint: string, formVal: any): Observable<any> {
     return this.http.put(Constant.baseUrl + endpoint, formVal, this.Headers)
       .map(res => {
+        this.extractData(res.json(), true);
         return res.json();
       });
   }
@@ -53,4 +59,15 @@ export class AppServiceService extends ChildService {
     option.headers = header;
     return option;
   }
+
+  private extractData(res, show?: boolean) {
+    const msg = res.message;
+
+    if (show && msg) {
+      this.toastr.success(msg);
+    }
+  }
+
 }
+
+

@@ -1,13 +1,24 @@
 <button (click)="showProperty(null)">Add</button>
 <br><br>
 <fieldset *ngIf="showForm">
+
   <form [formGroup]="stateForm" (submit)="addState(stateForm.value)">
+
+    <!--Country: <input auto-complete-->
+                   <!--formControlName="country_id"-->
+                    <!--[source]="observableSource"-->
+
+                   <!--value-property-name="id"-->
+                   <!--display-property-name="country"-->
+                   <!--placeholder="Select Country">-->
+
     Country: <select formControlName="country_id">
     <option value="" disabled>Select Country</option>
     <option *ngFor="let country of countryList" value={{country.id}}>{{country.country}}</option>
   </select><br>
     <div *ngIf="countryValidation(stateForm.controls['country_id'])">{{messageCountry}}</div>
     <br><br>
+
     State: <input type="text" placeholder="Enter State" formControlName="state"><br>
     <div *ngIf="stateValidation(stateForm.controls['state'])">{{message}}</div>
     <br><br>

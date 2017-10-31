@@ -121,6 +121,19 @@ export class StateInfoComponent implements OnInit {
     }
   }
 
+  // observableSource = (keyword: any): Observable<any[]> => {
+  //   const url: string = `country?=${keyword}`;
+  //   if (keyword) {
+  //     return this.appService.getAPI(url)
+  //       .map(res => {
+  //         console.log(res);
+  //         this.countryList = res.payload.data;
+  //         return this.countryList.results;
+  //       });
+  //   } else {
+  //     return Observable.of([]);
+  //   }
+  // }
 
   // getCountries() {
   //

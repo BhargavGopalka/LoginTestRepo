@@ -10,6 +10,8 @@ import {Location} from '../location/location.model';
 import {ApiEndpoints} from '../utility/constants/api-endpoints';
 import {ActivatedRoute} from '@angular/router';
 import {Department} from '../department/department.model';
+import {Observable} from 'rxjs/Observable';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-phone-detail',
@@ -45,7 +47,7 @@ export class PhoneDetailComponent implements OnInit {
   numberForm: FormGroup;
   selectNumber = null;
 
-  constructor(private appService: AppServiceService, private fb: FormBuilder, private route: ActivatedRoute) {
+  constructor(private appService: AppServiceService, private fb: FormBuilder, private route: ActivatedRoute, private _sanitizer: DomSanitizer) {
   }
 
   ngOnInit() {
@@ -58,6 +60,17 @@ export class PhoneDetailComponent implements OnInit {
     this.pageItems = +value;
     this.getNumberDetail();
     // console.log(this.pageItems);
+  }
+
+  departmentArray = (keyword: any): Observable<any[]> => {
+    // debugger;
+    const searchParam = JSON.stringify({'department': keyword});
+    return this.appService.getAPI(ApiEndpoints.Department + `?records=all&search=${searchParam}`);
+  }
+
+  listFormatter = (data: any) => {
+    const html = `<span>${data.department}</span>`;
+    return this._sanitizer.bypassSecurityTrustHtml(html);
   }
 
   getNumberDetail() {

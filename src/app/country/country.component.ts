@@ -4,6 +4,7 @@ import {Country} from './country.model';
 import {AppServiceService} from '../utility/shared-services/app-service.service';
 import {Headers, Http, RequestOptions} from '@angular/http';
 import {ApiEndpoints} from "../utility/constants/api-endpoints";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-country',
@@ -25,7 +26,10 @@ export class CountryComponent implements OnInit {
   countryForm: FormGroup;
   selectCountry = null;
 
-  constructor(private fb: FormBuilder, private  appService: AppServiceService, private http: Http) {
+  constructor(private fb: FormBuilder,
+              private  appService: AppServiceService,
+              private http: Http,
+              private toastr: ToastrService) {
   }
 
   ngOnInit() {
@@ -98,9 +102,13 @@ export class CountryComponent implements OnInit {
     // const url = `country/${id}`;
     this.appService.deleteAPI(ApiEndpoints.Country + `/${id}`)
       .subscribe(res => {
-        this.countryList.splice(index, 1);
-        console.log(res);
-      });
+          this.countryList.splice(index, 1);
+          // console.log(res);
+        },
+        (err) => {
+          console.log(err);
+          this.toastr.error(err.json().message);
+        });
   }
 
   nameValidation(control: AbstractControl) {

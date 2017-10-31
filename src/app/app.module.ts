@@ -22,6 +22,10 @@ import {NgxPaginationModule} from 'ngx-pagination';
 import {SideBarComponent} from './side-bar/side-bar.component';
 import {UtilityModule} from './utility/utility.module';
 import {Resolver} from './resolve';
+import {NguiAutoCompleteModule} from '@ngui/auto-complete';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {ToastrModule} from 'ngx-toastr';
+
 
 @NgModule({
   declarations: [
@@ -47,6 +51,9 @@ import {Resolver} from './resolve';
     ReactiveFormsModule,
     UtilityModule,
     NgxPaginationModule,
+    NguiAutoCompleteModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
     AppRoutingModule
   ],
   providers: [SaveDataGuard, AuthGuard, Resolver],

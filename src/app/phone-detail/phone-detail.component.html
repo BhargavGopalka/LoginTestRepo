@@ -63,11 +63,13 @@
               <label>Department: </label>
               <select formControlName="dept">
                 <option value="" disabled>Select Department</option>
-                <option *ngFor="let depart of departmentList" value={{depart.id}} id="{{'deptId' + i}}">{{depart.department}}</option>
+                <option *ngFor="let depart of departmentList" value={{depart.id}} id="{{'deptId' + i}}">
+                  {{depart.department}}
+                </option>
               </select>
 
               <!--<div>-->
-                <!--<input type="hidden"  formControlName="deptId" value={{departID}} >-->
+              <!--<input type="hidden"  formControlName="deptId" value={{departID}} >-->
               <!--</div>-->
 
               <!--<input type="text" placeholder="Select Department" formControlName="dept">-->
@@ -77,16 +79,19 @@
             <div>
               <label>Extension: </label>
               <input type="text" placeholder="Enter Extension" formControlName="extension">
-            </div><br>
+            </div>
+            <br>
 
 
-            <button *ngIf="showRemoveButton" type="button" (click)="onRemoveDept(i)">Remove Departments</button><br><br>
+            <button *ngIf="showRemoveButton" type="button" (click)="onRemoveDept(i)">Remove Departments</button>
+            <br><br>
 
           </div>
         </div>
         <button type="button" (click)="onAddDept()">Add Departments</button>
       </div>
-    </fieldset><br><br>
+    </fieldset>
+    <br><br>
 
     Crawl Number: <input type="checkbox" formControlName="isCrawl"><br><br>
 
@@ -118,7 +123,20 @@
       <td>{{i + 1}}</td>
       <td>{{numberInfo.org}}</td>
       <td>{{numberInfo.phone_number}}</td>
-      <td>{{numberInfo.department}}</td>
+      <!--<td>{{numberInfo.department}}</td>-->
+
+      <td><input type="text" auto-complete
+                 min-chars="1"
+                 placeholder="Enter Department"
+                 no-match-found-text="No Match Found"
+                 loading-text="Loading..."
+                 [source]="departmentArray"
+                 [list-formatter]="listFormatter"
+                 path-to-data="payload.data"
+                 value-property-name="id"
+                 display-property-name="department"/>
+      </td>
+
       <td>{{numberInfo.extension}}</td>
       <td>{{numberInfo.country}}</td>
       <td>{{numberInfo.state}}</td>
@@ -136,3 +154,4 @@
 
   <app-pagination *ngIf="showTable" (pageChange)="p = $event;getNumberDetail()"
                   (numberChange)="onChange($event)"></app-pagination>
+</div>

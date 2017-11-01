@@ -9,4 +9,5 @@ export class ApiEndpoints {
   public static PhoneDetail = 'phoneDetail';
   public static Phone = 'phone';
   public static SignIn = 'signin';
+  public static IMPORT_EXCEL = 'organization/import';
 }

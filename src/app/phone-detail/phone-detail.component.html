@@ -1,6 +1,23 @@
 <button (click)="showProperty(null)">Add</button>
 <br><br>
-<fieldset *ngIf="showForm">
+
+<fieldset *ngIf="showForm"><br>
+
+  <button (click)="addWindow = true">Add multiple Numbers
+  </button> <!--Go to Add multiple number section(bottom)-->
+
+  <!-- Add multiple numbers -->
+  <div *ngIf="addWindow">
+    <br><br>
+    <div>
+      <input type="file" #inputFile (change)="onFileSelect(inputFile)" placeholder="Choose File ...">
+    </div><br>
+    <div>
+      <button type="button" (click)="uploadFile()">Upload</button>
+      <button type="button" (click)="addWindow = false">Cancel</button>
+    </div>
+  </div>
+
   <form [formGroup]="numberForm" (submit)="addNumber(numberForm.value, numberForm.valid)">
     <br><br>
     Phone Number: <input type="text" placeholder="Phone Number" formControlName="phone_number"><br>
@@ -155,3 +172,5 @@
   <app-pagination *ngIf="showTable" (pageChange)="p = $event;getNumberDetail()"
                   (numberChange)="onChange($event)"></app-pagination>
 </div>
+
+

@@ -12,6 +12,9 @@ import {ActivatedRoute} from '@angular/router';
 import {Department} from '../department/department.model';
 import {Observable} from 'rxjs/Observable';
 import {DomSanitizer} from '@angular/platform-browser';
+import {Constant, ValidFileTypeArray} from '../utility/constants/constants';
+import {ToastrService} from 'ngx-toastr';
+import {Http, RequestOptions, Headers} from '@angular/http';
 
 @Component({
   selector: 'app-phone-detail',
@@ -28,10 +31,12 @@ export class PhoneDetailComponent implements OnInit {
   countryMessage: string;
   postalMessage: string;
   departID: number = null;
+  selectedFile: any = null;
 
   showTable = true;
   showForm = false;
   showRemoveButton = false;
+  addWindow = false;
 
   numberList: PhoneDetail[] = [];
   organizationList: Organization[] = [];
@@ -47,12 +52,54 @@ export class PhoneDetailComponent implements OnInit {
   numberForm: FormGroup;
   selectNumber = null;
 
-  constructor(private appService: AppServiceService, private fb: FormBuilder, private route: ActivatedRoute, private _sanitizer: DomSanitizer) {
+  constructor(private appService: AppServiceService,
+              private fb: FormBuilder,
+              private route: ActivatedRoute,
+              private _sanitizer: DomSanitizer,
+              private toastr: ToastrService,
+              private http: Http) {
   }
 
   ngOnInit() {
     this.countryList = this.route.snapshot.data['countryList'].payload.data;
     this.firstFunction();
+  }
+
+  // After selecting file
+  onFileSelect(inputFile) {
+    console.log(inputFile.files[0]);
+    const file = inputFile.files[0];
+    if (file) {
+      if (!ValidFileTypeArray.includes(file.type)) {
+        this.toastr.error('Please select valid file');
+        inputFile.value = '';
+        return;
+      }
+      this.selectedFile = file;
+    }
+  }
+
+  // Uploading selected file
+  uploadFile() {
+    // debugger;
+    if (this.selectedFile) {
+      const formData: FormData = new FormData();
+      formData.append('file', this.selectedFile);
+
+      const header = new Headers();
+      header.append('Authorization', sessionStorage.getItem('currentUser'));
+      const option = new RequestOptions();
+      option.headers = header;
+
+      this.http.post(Constant.baseUrl + ApiEndpoints.IMPORT_EXCEL, formData, option)
+        .subscribe( res => {
+          this.selectedFile = null;
+          this.addWindow = false;
+          this.toastr.success(res.json().message);
+        });
+    } else {
+      this.toastr.error('Please select file');
+    }
   }
 
   onChange(value) {

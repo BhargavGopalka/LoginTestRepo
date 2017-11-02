@@ -22,6 +22,8 @@ export class CityComponent implements OnInit {
 
   showTable = true;
   showForm = false;
+  isLoading = true;
+  afterLoad = false;
 
   cityForm: FormGroup;
   selectCity = null;
@@ -51,11 +53,14 @@ export class CityComponent implements OnInit {
   getCity(): void {
     // const url = `city?pageNumber=${this.pageNumber}&recordsPerPage=${this.items}`;
     this.appService.getAPI(ApiEndpoints.City + `?pageNumber=${this.pageNumber}&recordsPerPage=${this.items}`)
-      .subscribe(res => {
+      .subscribe((res => {
         console.log(res);
         this.totalNumRecords = res.pager.totalRecords;
         this.cityList = res.payload.data;
-      });
+      }),
+        (error: any) => {
+      console.log(error);
+        });
   }
 
   searchCity(value: string) {

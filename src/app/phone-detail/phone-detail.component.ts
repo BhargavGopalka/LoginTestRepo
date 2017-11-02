@@ -14,7 +14,7 @@ import {Observable} from 'rxjs/Observable';
 import {DomSanitizer} from '@angular/platform-browser';
 import {Constant, ValidFileTypeArray} from '../utility/constants/constants';
 import {ToastrService} from 'ngx-toastr';
-import {Http, RequestOptions, Headers} from '@angular/http';
+import {Headers, Http, RequestOptions} from '@angular/http';
 
 @Component({
   selector: 'app-phone-detail',
@@ -81,7 +81,6 @@ export class PhoneDetailComponent implements OnInit {
 
   // Uploading selected file
   uploadFile() {
-    // debugger;
     if (this.selectedFile) {
       const formData: FormData = new FormData();
       formData.append('file', this.selectedFile);
@@ -92,7 +91,7 @@ export class PhoneDetailComponent implements OnInit {
       option.headers = header;
 
       this.http.post(Constant.baseUrl + ApiEndpoints.IMPORT_EXCEL, formData, option)
-        .subscribe( res => {
+        .subscribe(res => {
           this.selectedFile = null;
           this.addWindow = false;
           this.toastr.success(res.json().message);
@@ -110,7 +109,6 @@ export class PhoneDetailComponent implements OnInit {
   }
 
   departmentArray = (keyword: any): Observable<any[]> => {
-    // debugger;
     const searchParam = JSON.stringify({'department': keyword});
     return this.appService.getAPI(ApiEndpoints.Department + `?records=all&search=${searchParam}`);
   }
@@ -132,7 +130,6 @@ export class PhoneDetailComponent implements OnInit {
   }
 
   getDept() {
-    // debugger;
     if (this.departmentList.length === 0) {
       this.appService.getAPI(ApiEndpoints.Department + `?records=all`)
         .subscribe(res => {
@@ -143,7 +140,6 @@ export class PhoneDetailComponent implements OnInit {
   }
 
   onSelectDepartment(value) {
-    // debugger;
     console.log(value);
     this.departID = value;
     console.log(this.departID);

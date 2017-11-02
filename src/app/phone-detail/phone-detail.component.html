@@ -6,7 +6,7 @@
   <button (click)="addWindow = true">Add multiple Numbers
   </button> <!--Go to Add multiple number section(bottom)-->
 
-  <!-- Add multiple numbers -->
+  <!-- Add multiple numbers or Add file as in input -->
   <div *ngIf="addWindow">
     <br><br>
     <div>
@@ -17,6 +17,7 @@
       <button type="button" (click)="addWindow = false">Cancel</button>
     </div>
   </div>
+  <!-- Finish Add File section -->
 
   <form [formGroup]="numberForm" (submit)="addNumber(numberForm.value, numberForm.valid)">
     <br><br>

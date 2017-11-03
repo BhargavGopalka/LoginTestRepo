@@ -14,7 +14,7 @@ import {Observable} from 'rxjs/Observable';
 import {DomSanitizer} from '@angular/platform-browser';
 import {Constant, ValidFileTypeArray} from '../utility/constants/constants';
 import {ToastrService} from 'ngx-toastr';
-import {Headers, Http, RequestOptions} from '@angular/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 @Component({
   selector: 'app-phone-detail',
@@ -57,7 +57,7 @@ export class PhoneDetailComponent implements OnInit {
               private route: ActivatedRoute,
               private _sanitizer: DomSanitizer,
               private toastr: ToastrService,
-              private http: Http) {
+              private http: HttpClient) {
   }
 
   ngOnInit() {
@@ -85,16 +85,19 @@ export class PhoneDetailComponent implements OnInit {
       const formData: FormData = new FormData();
       formData.append('file', this.selectedFile);
 
-      const header = new Headers();
-      header.append('Authorization', sessionStorage.getItem('currentUser'));
-      const option = new RequestOptions();
-      option.headers = header;
+      // const header = new HttpHeaders();
+      // header.set('Authorization', sessionStorage.getItem('currentUser'));
+      // const option = new HttpRequest < any >;
+      // option.headers = header;
 
-      this.http.post(Constant.baseUrl + ApiEndpoints.IMPORT_EXCEL, formData, option)
+      this.http.post(Constant.baseUrl + ApiEndpoints.IMPORT_EXCEL, formData, {
+        headers: new HttpHeaders().set('Authorization', sessionStorage.getItem('currentUser')),
+      })
         .subscribe(res => {
           this.selectedFile = null;
           this.addWindow = false;
-          this.toastr.success(res.json().message);
+          console.log(res);
+          // this.toastr.success(res);
         });
     } else {
       this.toastr.error('Please select file');

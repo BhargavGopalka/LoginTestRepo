@@ -60,9 +60,11 @@ export class LoginUserComponent implements OnInit {
   // }
 
   login(formValue: any) {
+    debugger;
     if (this.loginForm.valid === true) {
       this.appService.postAPI(ApiEndpoints.SignIn, formValue)
         .subscribe(res => {
+          debugger;
           console.log(res);
           const response = res;
           const token = response.payload.token.access_token;
@@ -70,6 +72,9 @@ export class LoginUserComponent implements OnInit {
           if (response.status === 200) {
             this.routes.navigate(['infoTable']);
           }
+        },
+        error => {
+          console.log(error);
         });
     }
   }

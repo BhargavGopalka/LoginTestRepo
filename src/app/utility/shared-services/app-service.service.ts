@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {Headers, Http, RequestOptions} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import {Constant} from '../constants/constants';
 import {ChildService} from '../child/child.service';
@@ -8,13 +7,12 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/Rx';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 @Injectable()
 export class AppServiceService extends ChildService {
 
-  // baseUrl = `https://mvp-dev-extensionsapi.visumenu.com/`;
-
-  constructor(private http: Http,
+  constructor(private http: HttpClient,
               private toastr: ToastrService) {
     super();
   }
@@ -37,6 +35,7 @@ export class AppServiceService extends ChildService {
   private hideLoader() {
     this.setLoader(false);
   }
+
   /* Getter and setter isLoading */
   /* End */
 
@@ -45,35 +44,25 @@ export class AppServiceService extends ChildService {
     if (loader) {
       this.showLoader();
     }
-    return this.http.get(Constant.baseUrl + endpoint, this.Headers)
+    return this.http.get(Constant.baseUrl + endpoint, {
+      headers: new HttpHeaders().set('Authorization', sessionStorage.getItem('currentUser')),
+    })
       .catch(this.onCatch)
       .map(res => {
         this.extractData(res.json(), false);
         return res.json();
       })
       .finally(() => {
-      this.hideLoader();
+        this.hideLoader();
       });
   }
 
   /* Delete record */
   deleteAPI(endpoint: string, loader: boolean = true): Observable<any> {
     this.showLoader();
-    return this.http.delete(Constant.baseUrl + endpoint, this.Headers)
-      .catch(this.onCatch)
-      .map(res => {
-        this.extractData(res.json(), true);
-        return res.json();
-      })
-      .finally(() => {
-      this.hideLoader();
-      });
-  }
-
-  /* Add record */
-  postAPI(endpoint: string, formVal: any): Observable<any> {
-    this.showLoader();
-    return this.http.post(Constant.baseUrl + endpoint, formVal, this.Headers)
+    return this.http.delete(Constant.baseUrl + endpoint, {
+      headers: new HttpHeaders().set('Authorization', sessionStorage.getItem('currentUser')),
+    })
       .catch(this.onCatch)
       .map(res => {
         this.extractData(res.json(), true);
@@ -84,27 +73,45 @@ export class AppServiceService extends ChildService {
       });
   }
 
+  /* Add record */
+  postAPI(endpoint: string, formVal: any): Observable<any> {
+    debugger;
+    this.showLoader();
+    return this.http.post(Constant.baseUrl + endpoint, formVal)
+      .catch(this.onCatch)
+      .map(res => {
+        debugger;
+        this.extractData(res, true);
+        return res;
+      })
+      .finally(() => {
+        this.hideLoader();
+      });
+  }
+
   /* Update record */
   putAPI(endpoint: string, formVal: any): Observable<any> {
     this.showLoader();
-    return this.http.put(Constant.baseUrl + endpoint, formVal, this.Headers)
+    return this.http.put(Constant.baseUrl + endpoint, formVal, {
+      headers: new HttpHeaders().set('Authorization', sessionStorage.getItem('currentUser')),
+    })
       .catch(this.onCatch)
       .map(res => {
         this.extractData(res.json(), true);
         return res.json();
       })
       .finally(() => {
-      this.hideLoader();
+        this.hideLoader();
       });
   }
 
-  get Headers(): RequestOptions {
-    const header = new Headers();
-    header.append('Authorization', sessionStorage.getItem('currentUser'));
-    const option = new RequestOptions();
-    option.headers = header;
-    return option;
-  }
+  // get Headers() {
+  //   const header = new Header();
+  //   header.set('Authorization', sessionStorage.getItem('currentUser'));
+  //   const option = new RequestOptions();
+  //   option.headers = header;
+  //   return header;
+  // }
 
   private extractData(res, show?: boolean) {
     const msg = res.message;

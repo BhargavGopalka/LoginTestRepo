@@ -2,9 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Country} from './country.model';
 import {AppServiceService} from '../utility/shared-services/app-service.service';
-import {Headers, Http, RequestOptions} from '@angular/http';
+import {Headers, RequestOptions} from '@angular/http';
 import {ApiEndpoints} from '../utility/constants/api-endpoints';
 import {ToastrService} from 'ngx-toastr';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 @Component({
   selector: 'app-country',
@@ -28,7 +29,7 @@ export class CountryComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private  appService: AppServiceService,
-              private http: Http,
+              private http: HttpClient,
               private toastr: ToastrService) {
   }
 
@@ -53,17 +54,20 @@ export class CountryComponent implements OnInit {
 
   searchCountry(value: string) {
     const searchName = {'country': value};
-    const header = new Headers();
-    header.append('search', JSON.stringify(searchName));
-    header.append('Authorization', sessionStorage.getItem('currentUser'));
-    const option = new RequestOptions();
-    option.headers = header;
+    // const header = new Headers();
+    // header.append('search', JSON.stringify(searchName));
+    // header.append('Authorization', sessionStorage.getItem('currentUser'));
+    // const option = new RequestOptions();
+    // option.headers = header;
 
     const url = `https://mvp-dev-extensionsapi.visumenu.com/country?pageNumber=1&recordsPerPage=20&sortBy=country&sortOrder=asc`;
     // this.appService.getAPI(url,option)
-    this.http.get(url, option)
+    this.http.get(url, {
+      headers: new HttpHeaders().set('Authorization', sessionStorage.getItem('currentUser')),
+    })
       .subscribe(res => {
-        this.countryList = res.json().payload.data;
+        console.log(res);
+        // this.countryList = res.json().payload.data;
         // console.log(this.countryList);
       });
   }
@@ -104,7 +108,7 @@ export class CountryComponent implements OnInit {
         // (err) => {
         //   console.log(err);
         //   this.toastr.error(err.json().message);
-        );
+      );
   }
 
   nameValidation(control: AbstractControl) {

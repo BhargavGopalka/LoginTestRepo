@@ -2,7 +2,6 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
-import {HttpModule} from '@angular/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InfoTableComponent} from './info-table/info-table.component';
 import {AppRoutingModule} from './app-routing/app-routing.module';
@@ -25,6 +24,7 @@ import {Resolver} from './resolve';
 import {NguiAutoCompleteModule} from '@ngui/auto-complete';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastrModule} from 'ngx-toastr';
+import {HttpClientModule} from '@angular/common/http';
 
 
 @NgModule({
@@ -46,7 +46,7 @@ import {ToastrModule} from 'ngx-toastr';
   ],
   imports: [
     BrowserModule,
-    HttpModule,
+    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     UtilityModule,

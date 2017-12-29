@@ -1,0 +1,24 @@
+<div class="navigation-menu-section">
+  <ul class="tree" *ngFor="let d of data.children">
+    <li value={{d.ivr_menu_id}}>
+      <div class="display-inline" *ngIf="d.children.length > 0">
+        <a class="navigation-arrow" (click)="openChildView(d)">
+          <img *ngIf="!childMenu" src="assets/images/right.png"/>
+          <img *ngIf="childMenu" src="assets/images/down.png"/>
+        </a>
+      </div>
+      <div class="display-inline">
+        <a class="cursor no-white-space"
+           (click)="d.children.length>0 ? openChildView(d) :  showFormView(d) ">
+          <img src="assets/images/notApproved.png" width="12px"/>
+          <span>[{{d.ivr_menu_dtmf_seq}}] {{d.ivr_menu_name}}</span>
+        </a>
+      </div>
+
+      <app-tree-detail *ngIf="childMenu" [data]="d"></app-tree-detail>
+
+    </li>
+  </ul>
+</div>
+<br><br>
+

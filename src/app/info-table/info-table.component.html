@@ -20,23 +20,80 @@
   <p>Today is {{today | date}}</p>
   <p>Current Time is {{today | date:'shortTime'}}</p>
 </div>
-
 <br><br>
-<table border="1">
-  <tr>
-    <th>Organization</th>
-    <th>Number</th>
-    <th>Department</th>
-    <th>Extension</th>
-    <th>Country</th>
-    <th>State</th>
-  </tr>
-  <tr *ngFor="let detail of details">
-    <td>{{detail.org}}</td>
-    <td [innerHTML]="detail.phone_number | boldPipe"></td>
-    <td>{{detail.department}}</td>
-    <td>{{detail.extension}}</td>
-    <td>{{detail.country | uppercase}}</td>
-    <td>{{detail.state}}</td>
-  </tr>
-</table>
+
+<div>
+  <button type="button" (click)="onClickFilters()">Filters</button>
+</div>
+<br><br>
+
+<div *ngIf="filterView">
+  <fieldset>
+    <select class="selectField" [(ngModel)]="filterOrgArray" (focusout)="filterNumber()" multiple>
+      <option value="" disabled>Organization</option>
+      <option *ngFor="let organization of organizationList" value="{{organization.id}}">{{organization.name}}</option>
+    </select>
+    <br><br>
+
+    <select class="selectField" [(ngModel)]="filterNumberArray" (focusout)="doHeader()" multiple>
+      <option value="" disabled>Phone Number</option>
+      <option *ngFor="let number of numberList" value="{{number.phone_number}}">{{number.phone_number}}</option>
+    </select>
+    <br><br>
+
+    <select class="selectField" [(ngModel)]="filterDepartmentArray" (focusout)="doHeader()" multiple>
+      <option value="" disabled>Department</option>
+      <option *ngFor="let dept of departmentList" value="{{dept.id}}">{{dept.department}}</option>
+    </select>
+    <br><br>
+
+    <select class="selectField" [(ngModel)]="filterCountryArray" (focusout)="doHeader()" multiple>
+      <option value="" disabled>Country</option>
+      <option *ngFor="let country of countryList" value="{{country.id}}">{{country.country}}</option>
+    </select>
+    <br><br>
+
+    <select class="selectField" [(ngModel)]="filterStateArray" (focusout)="doHeader()" multiple>
+      <option value="" disabled>State</option>
+      <option *ngFor="let state of stateList" value="{{state.id}}">{{state.state}}</option>
+    </select>
+    <br><br>
+
+    <select class="selectField" [(ngModel)]="filterCityArray" (focusout)="doHeader()" multiple>
+      <option value="" disabled>City</option>
+      <option *ngFor="let city of cityList" value="{{city.id}}">{{city.name}}</option>
+    </select>
+    <br><br>
+
+    <button type="button" (click)="onClickExport()">Export</button>
+    <button type="button" (click)="onClickCancel()">Cancel</button>
+    <button type="button" (click)="filterView = false">Go Back</button>
+    <br>
+  </fieldset>
+</div>
+
+<div>
+  <br><br>
+  <table border="1">
+    <tr>
+      <th>Organization</th>
+      <th>Number</th>
+      <th>Department</th>
+      <th>Extension</th>
+      <th>Country</th>
+      <th>State</th>
+      <th>Menu Detail</th>
+    </tr>
+    <tr *ngFor="let detail of details">
+      <td>{{detail.org}}</td>
+      <td [innerHTML]="detail.phone_number | boldPipe"></td>
+      <td>{{detail.department}}</td>
+      <td>{{detail.extension}}</td>
+      <td>{{detail.country | uppercase}}</td>
+      <td>{{detail.state}}</td>
+      <td>
+        <button (click)="redirectToMenu(detail)">Menu Detail</button>
+      </td>
+    </tr>
+  </table>
+</div>

@@ -1,0 +1,11 @@
+ul li{
+  list-style: none;
+}
+
+a{
+  cursor: pointer;
+}
+
+.display-inline{
+  display: inline-block;
+}

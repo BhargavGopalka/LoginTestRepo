@@ -18,8 +18,8 @@ export class LoginUserComponent implements OnInit {
 
   ngOnInit() {
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(10)]],
-      password: ['', [Validators.required, Validators.maxLength(10)]]
+      username: ['visumenu', [Validators.required, Validators.minLength(2), Validators.maxLength(10)]],
+      password: ['visumenu1', [Validators.required, Validators.maxLength(10)]]
     });
   }
 
@@ -60,12 +60,9 @@ export class LoginUserComponent implements OnInit {
   // }
 
   login(formValue: any) {
-    debugger;
     if (this.loginForm.valid === true) {
-      this.appService.postAPI(ApiEndpoints.SignIn, formValue)
+      this.appService.loginPost(ApiEndpoints.SignIn, formValue)
         .subscribe(res => {
-          debugger;
-          console.log(res);
           const response = res;
           const token = response.payload.token.access_token;
           sessionStorage.setItem('currentUser', token);

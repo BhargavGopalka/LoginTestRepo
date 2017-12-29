@@ -3,7 +3,6 @@ import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/form
 import {AppServiceService} from '../utility/shared-services/app-service.service';
 import {Organization} from './organization.model';
 import {ApiEndpoints} from '../utility/constants/api-endpoints';
-import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-organization',
@@ -43,10 +42,8 @@ export class OrganizationComponent implements OnInit {
     // const url = `organization?pageNumber=${this.p}&recordsPerPage=${this.items}`;
     this.appService.getAPI(ApiEndpoints.Organization + `?pageNumber=${this.p}&recordsPerPage=${this.items}`)
       .subscribe(res => {
-        console.log(res);
         this.Organization = res.payload.data;
         this.totalNumRecords = res.pager.totalRecords;
-        // console.log(this.details);
       });
   }
 
@@ -56,7 +53,6 @@ export class OrganizationComponent implements OnInit {
     this.appService.getAPI(ApiEndpoints.Organization + `sortBy=name&sortOrder=asc&search=${JSON.stringify(searchName)}`)
       .subscribe(res => {
         this.Organization = res.payload.data;
-        console.log(this.Organization);
       });
   }
 
@@ -70,7 +66,6 @@ export class OrganizationComponent implements OnInit {
       if (this.selectedOrg == null) {
         this.appService.postAPI(ApiEndpoints.Organization, formVal)
           .subscribe(res => {
-              console.log(res);
               this.getOrg();
               this.tableShow = true;
               this.formShow = false;
@@ -79,9 +74,9 @@ export class OrganizationComponent implements OnInit {
       } else {
         this.appService.putAPI(ApiEndpoints.Organization + '/' + this.selectedOrg.id, formVal)
           .subscribe(res => {
-              console.log(res);
+
               // this.details.push(res.json().payload.data);
-              // console.log(this.details);
+
               this.getOrg();
               this.tableShow = true;
               this.formShow = false;

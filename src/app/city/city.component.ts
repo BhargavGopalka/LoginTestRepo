@@ -40,7 +40,6 @@ export class CityComponent implements OnInit {
     this.appService.deleteAPI(ApiEndpoints.City + `/${id}`)
       .subscribe(res => {
         this.cityList.splice(index, 1);
-        console.log(res);
       });
   }
 
@@ -54,12 +53,10 @@ export class CityComponent implements OnInit {
     // const url = `city?pageNumber=${this.pageNumber}&recordsPerPage=${this.items}`;
     this.appService.getAPI(ApiEndpoints.City + `?pageNumber=${this.pageNumber}&recordsPerPage=${this.items}`)
       .subscribe((res => {
-        console.log(res);
         this.totalNumRecords = res.pager.totalRecords;
         this.cityList = res.payload.data;
       }),
         (error: any) => {
-      console.log(error);
         });
   }
 
@@ -69,7 +66,6 @@ export class CityComponent implements OnInit {
     this.appService.getAPI(ApiEndpoints.City + `?records=all&sortBy=name&sortOrder=asc&search=${JSON.stringify(searchName)}`)
       .subscribe(res => {
         this.cityList = res.payload.data;
-        // console.log(this.stateList);
       });
   }
 
@@ -95,7 +91,6 @@ export class CityComponent implements OnInit {
         // const url = `city`;
         this.appService.postAPI(ApiEndpoints.City, formValue)
           .subscribe(res => {
-              console.log(res);
               this.getCity();
               this.showTable = true;
               this.showForm = false;
@@ -107,7 +102,6 @@ export class CityComponent implements OnInit {
         // const anotherUrl = `city/${this.selectCity.id}`;
         this.appService.putAPI(ApiEndpoints.City + `/${this.selectCity.id}`, formValue)
           .subscribe(res => {
-              console.log(res);
               this.getCity();
               this.showTable = true;
               this.showForm = false;
@@ -123,7 +117,6 @@ export class CityComponent implements OnInit {
     // const url = `state`;
     this.appService.getAPI(ApiEndpoints.State)
       .subscribe(res => {
-        console.log(res);
         this.stateList = res.payload.data;
       });
   }

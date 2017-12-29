@@ -1,0 +1,158 @@
+<!-- Form View -->
+<div *ngIf="showForm">
+  <form [formGroup]="crawlerForm">
+
+    <div>
+      <a class="nameField">Long Name:</a>
+      <input class="inputField" type="text" placeholder="Enter Long Name" formControlName="ivr_menu_name"
+             (focusout)="updateCrawlerDetail('ivr_menu_name', $event.target.value)"/>
+    </div>
+    <br>
+
+    <div>
+      <a class="nameField">Short Name:</a>
+      <input class="inputField" type="text" placeholder="Enter Short Name" formControlName="ivr_menu_name_short"
+             (focusout)="updateCrawlerDetail('ivr_menu_name_short', $event.target.value)"/>
+    </div>
+    <br>
+
+    <div>
+      <a class="nameField">Calling Type:</a>
+      <select class="inputField" formControlName="ivr_calling_type"
+              (focusout)="updateCrawlerDetail('ivr_calling_type', $event.target.value)">
+        <option value="DIRECT" selected>DIRECT</option>
+        <option value="AGENT">AGENT</option>
+        <option value="VOICEMAIL">VOICEMAIL</option>
+      </select>
+    </div>
+    <br>
+
+    <div *ngIf="parentView">
+      <div>
+        <a class="nameField">Menu Subtype:</a>
+        <select class="inputField" formControlName="ivr_menu_subtype"
+                (focusout)="updateCrawlerDetail('ivr_menu_subtype', $event.target.value)">
+          <option value="" disabled>Select Subtype</option>
+          <option *ngFor="let subtype of subtypeList" value="{{subtype}}">{{subtype}}</option>
+        </select>
+      </div>
+      <br>
+
+      <div>
+        <a class="nameField">Parent DTMF:</a>
+        <input class="inputField" type="text" placeholder="DTMF" formControlName="parentDTMF" disabled/>
+      </div>
+      <br>
+
+      <div>
+        <a class="nameField">DTMF:</a>
+        <input class="inputField" type="text" placeholder="DTMF" formControlName="ivr_menu_dtmf_seq"
+               (focusout)="updateCrawlerDetail('ivr_menu_dtmf_seq', $event.target.value)"/>
+      </div>
+      <br>
+
+      <div>
+        <a class="nameField">Parent STIME:</a>
+        <input class="inputField" type="text" placeholder="STIME" formControlName="parentSTIME" disabled/>
+      </div>
+      <br>
+
+      <div>
+        <a class="nameField">STIME:</a>
+        <input class="stimeField" type="text" placeholder="STIME" formControlName="sTime" disabled/>
+      </div>
+      <br>
+
+      <div *ngFor="let time of sTimeArray; let i=index">
+        <a class="nameField">STIME:</a>
+        <input class="inputField" type="text" placeholder="STIME" formControlName="sTime"
+               (focusout)="updateSTimeDetail('ivr_menu_stime', $event.target.value, i)" value="{{time.labelSTime}}"/>
+        <input class="inputField" type="text" placeholder="STIME" formControlName="sTime"
+               value="{{time.labelDTMF}}" disabled/>
+      </div>
+      <br>
+
+    </div>
+
+    <div>
+      <button type="click" (click)="onClickAdd()">Add</button>
+      <button *ngIf="parentView" (click)="onClickDelete()">Delete</button>
+    </div>
+
+  </form>
+</div>
+<br><br>
+
+<div *ngIf="addLeafForm">
+  <fieldset>
+    <form [formGroup]="leafForm" (submit)="onSubmitLeafDetails(leafForm.value)">
+
+      <br>
+      <div>
+        <a class="nameField">Long Name:</a>
+        <input class="inputField" type="text" placeholder="Enter Long Name" formControlName="ivr_menu_name"/>
+      </div>
+      <br>
+
+      <div>
+        <a class="nameField">Short Name:</a>
+        <input class="inputField" type="text" placeholder="Enter Short Name" formControlName="ivr_menu_name_short"/>
+      </div>
+      <br>
+
+      <div>
+        <a class="nameField">Menu Subtype:</a>
+        <select class="inputField" formControlName="ivr_menu_subtype">
+          <option *ngFor="let subtype of subtypeList" value="{{subtype}}">{{subtype}}</option>
+        </select>
+      </div>
+      <br>
+
+      <div>
+        <a class="nameField">Calling Type:</a>
+        <select class="inputField" formControlName="ivr_calling_type">
+          <option value="DIRECT" selected>DIRECT</option>
+          <option value="AGENT">AGENT</option>
+          <option value="VOICEMAIL">VOICEMAIL</option>
+        </select>
+      </div>
+      <br>
+
+      <div>
+        <a class="nameField">Parent DTMF:</a>
+        <input class="inputField" type="text" placeholder="DTMF" formControlName="parentDTMF" disabled/>
+      </div>
+      <br>
+
+      <div>
+        <a class="nameField">DTMF:</a>
+        <input class="inputField" type="text" placeholder="DTMF" formControlName="ivr_menu_dtmf_seq"
+        (keyup)="onAddDtmf($event.key)"/>
+      </div>
+      <br>
+
+      <div>
+        <a class="nameField">Parent STIME:</a>
+        <input class="inputField" type="text" placeholder="STIME" formControlName="parentSTIME" disabled/>
+      </div>
+      <br>
+
+      <div *ngFor="let time of dtmfSTimeArray; let i=index">
+        <a class="nameField">STIME:</a>
+        <input class="inputField" type="text" placeholder="STIME" formControlName="sTime"
+               (focusout)="updateSTimeArray($event.target.value, i)" value="{{time.labelSTime}}"/>
+        <input class="inputField" type="text" placeholder="STIME" formControlName="sTime"
+               value="{{time.labelDTMF}}" disabled/>
+      </div>
+      <br>
+
+
+      <div>
+        <button type="submit">Add</button>
+        <button type="reset" (click)="onClickCancel()">Cancel</button>
+      </div>
+      <br>
+
+    </form>
+  </fieldset>
+</div>

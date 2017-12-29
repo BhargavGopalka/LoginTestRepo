@@ -10,4 +10,7 @@ export class ApiEndpoints {
   public static Phone = 'phone';
   public static SignIn = 'signin';
   public static IMPORT_EXCEL = 'organization/import';
+  public static MENU = 'menu';
+  public static EXPORT = 'ivr/export';
+  public static IVR = 'ivr';
 }

@@ -14,6 +14,7 @@ import {AuthGuard, SaveDataGuard} from '../auth.guard';
 import {OrganizationDataComponent} from '../organization-data/organization-data.component';
 import {CountryDataComponent} from '../country-data/country-data.component';
 import {Resolver} from '../resolve';
+import {MenuDetailComponent} from "../menu-detail/menu-detail.component";
 
 export const routes: Routes = [
   {
@@ -29,6 +30,11 @@ export const routes: Routes = [
   {
     path: 'login',
     component: LoginUserComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'menuDetail',
+    component: MenuDetailComponent,
     canActivate: [AuthGuard]
   },
   {

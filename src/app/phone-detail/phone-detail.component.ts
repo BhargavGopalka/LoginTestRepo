@@ -124,7 +124,7 @@ export class PhoneDetailComponent implements OnInit {
   getNumberDetail() {
     // console.log(this.pageItems);
     // const url = `phoneDetail?pageNumber=${this.p}&recordsPerPage=${this.pageItems}&sortBy=org&sortOrder=asc`;
-    this.appService.getAPI(ApiEndpoints.PhoneDetail + `?pageNumber=${this.p}&recordsPerPage=${this.pageItems}&sortBy=org&sortOrder=asc`)
+    this.appService.getAPI(ApiEndpoints.PhoneDetail, {pageNumber: this.p, recordsPerPage: this.pageItems})
       .subscribe(res => {
         // console.log(res);
         this.tPage = res.pager.totalRecords;

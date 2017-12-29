@@ -66,9 +66,7 @@ export class CountryComponent implements OnInit {
       headers: new HttpHeaders().set('Authorization', sessionStorage.getItem('currentUser')),
     })
       .subscribe(res => {
-        console.log(res);
         // this.countryList = res.json().payload.data;
-        // console.log(this.countryList);
       });
   }
 
@@ -82,16 +80,14 @@ export class CountryComponent implements OnInit {
               this.tableShow = true;
               this.formShow = false;
               // this.details.push(res.json().payload.data);
-              // console.log(this.details);
               // this.http.get(url, option)
               //   .subscribe( respon => {this.details.push(respon.json());
-              //   console.log(this.details); });
+              // });
             },
             msg => console.log(`Error: ${msg.status} ${msg.statusText}`));
       } else {
         this.appService.putAPI(ApiEndpoints.Country + '/' + this.selectCountry.id, formVal)
           .subscribe(res => {
-            console.log(res);
             this.getCountry();
             this.tableShow = true;
             this.formShow = false;
@@ -106,7 +102,6 @@ export class CountryComponent implements OnInit {
           this.countryList.splice(index, 1);
         }
         // (err) => {
-        //   console.log(err);
         //   this.toastr.error(err.json().message);
       );
   }

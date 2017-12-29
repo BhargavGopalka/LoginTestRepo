@@ -25,6 +25,9 @@ import {NguiAutoCompleteModule} from '@ngui/auto-complete';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastrModule} from 'ngx-toastr';
 import {HttpClientModule} from '@angular/common/http';
+import {MenuDetailComponent} from './menu-detail/menu-detail.component';
+import {TreeDetailComponent} from './tree-detail/tree-detail.component';
+import {MenuFormComponent} from './menu-form/menu-form.component';
 
 
 @NgModule({
@@ -42,7 +45,10 @@ import {HttpClientModule} from '@angular/common/http';
     PhoneDetailComponent,
     OrganizationDataComponent,
     CountryDataComponent,
-    SideBarComponent
+    SideBarComponent,
+    MenuDetailComponent,
+    TreeDetailComponent,
+    MenuFormComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +62,7 @@ import {HttpClientModule} from '@angular/common/http';
     ToastrModule.forRoot(),
     AppRoutingModule
   ],
-  providers: [SaveDataGuard, AuthGuard, Resolver],
+  providers: [SaveDataGuard, AuthGuard, Resolver, MenuDetailComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -198,9 +198,33 @@ export class MenuDetailComponent implements OnInit {
     if (tillValue === '' || tillValue === null || tillValue === undefined) {
       this.workingHours[index].timeTill = defaultWorkingHours;
     } else {
-      if (tillValue.length < 4 || tillValue.length > 5) {
+      if (tillValue.length === 3 || tillValue.length > 5) {
         this.toastr.error('Valid Time Required!');
         this.workingHours[index].timeTill = defaultWorkingHours;
+      }
+      if (tillValue.length === 1) {
+        const patternOne = /[0-9]/;
+        if (!patternOne.test(tillValue)) {
+          // invalid character, prevent input
+          event.preventDefault();
+          this.toastr.error('Valid Time Required!');
+          this.workingHours[index].timeTill = defaultWorkingHours;
+        } else {
+          this.workingHours[index].timeTill = `0${tillValue}:00`;
+          this.updateTime();
+        }
+      }
+      if (tillValue.length === 2) {
+        const patternTwo = /([0-1][0-9]|2[0-3])/;
+        if (!patternTwo.test(tillValue)) {
+          // invalid character, prevent input
+          event.preventDefault();
+          this.toastr.error('Valid Time Required!');
+          this.workingHours[index].timeTill = defaultWorkingHours;
+        } else {
+          this.workingHours[index].timeTill = `${tillValue}:00`;
+          this.updateTime();
+        }
       }
       if (tillValue.length === 4) {
         const patternFour = /([0-1][0-9]|2[0-3])([0-5][0-9])/;

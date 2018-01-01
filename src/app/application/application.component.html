@@ -1,52 +1,111 @@
-<button (click)="showForm(null)">Add</button>
-<br><br>
-<div *ngIf="formShow">
-  <fieldset>
-    <form [formGroup]="appForm" (submit)="addApp(appForm.value)">
-      <br>
-      App:
-      <input type="text" placeholder="Enter Url" formControlName="url"><br>
-      <div *ngIf="urlValidation(appForm.controls['url'])">{{urlMessage}}</div>
-      <br><br>
-      Description:
-      <input type="text" placeholder="Enter Description" formControlName="description"><br><br>
-      <button type="submit">{{selectApp ? 'Update' : 'Add'}}</button>
-      <button type="reset" (click)="goPrev()">Cancel</button>
-      <br>
-    </form>
-  </fieldset>
+<div *ngIf="!showAllOrgView">
+  <button (click)="showForm(null)">Add</button>
+  <br><br>
+  <div *ngIf="formShow">
+    <fieldset>
+      <form [formGroup]="appForm" (submit)="addApp(appForm.value)">
+        <br>
+        App:
+        <input type="text" placeholder="Enter Url" formControlName="url"><br>
+        <div *ngIf="urlValidation(appForm.controls['url'])">{{urlMessage}}</div>
+        <br><br>
+
+        <div>
+          <span>Description:</span>
+          <input type="text" placeholder="Enter Description" formControlName="description"><br><br>
+        </div>
+
+        <br><br>
+        <div>
+          <div class="display-inline">
+            <span>Organization:</span>
+            <input type="text" #filterOrg (keyup)="filterOrganization(filterOrg.value)">
+
+            <input type="checkbox" (change)="onSelectAllOrganization($event)">Select All
+          </div>
+          <br>
+          <fieldset>
+            <div *ngFor="let organization of organizationList">
+              <input type="checkbox" [checked]="allChecked" (change)="onCheckOrganization($event)"
+                     value="{{organization.id}}">{{organization.name}}
+            </div>
+          </fieldset>
+        </div>
+        <br><br>
+
+        <button type="submit">{{selectApp ? 'Update' : 'Add'}}</button>
+        <button type="reset" (click)="goPrev()">Cancel</button>
+        <br>
+      </form>
+    </fieldset>
+  </div>
+  <br><br>
+  <div *ngIf="tableShow">
+    <table border="1">
+      <tr>
+        <th>Index</th>
+        <th>App</th>
+        <th>Description</th>
+        <th>Organization</th>
+        <th>Delete</th>
+      </tr>
+
+      <tr>
+        <td colspan="5">
+          <input #searchBox id="search-box" placeholder="Search App" (keyup)="searchApp(searchBox.value)"/>
+        </td>
+      </tr>
+
+      <tr
+        *ngFor="let appInfo of appList | paginate:{itemsPerPage: items, currentPage: pageNumber, totalItems: totalNumRecords}; let i = index">
+        <th>{{i + 1}}</th>
+        <th>{{appInfo.url}}</th>
+        <th>{{appInfo.description}}</th>
+        <th><a (click)="onClickAssignOrg(appInfo.id)">{{appInfo.orgs_count}} assigned</a></th>
+        <th>
+          <button (click)="removeApp(appInfo.id, i)">Remove</button>
+        </th>
+      </tr>
+    </table>
+  </div>
+  <app-pagination *ngIf="tableShow" (pageChange)="pageNumber = $event;getApp()"
+                  (numberChange)="numChange($event)"></app-pagination>
+
+  <br><br>
+  <div *ngIf="showOrg">
+    <span>ORGANIZATION ASSIGN</span>
+    <hr>
+    <input type="text" #filterAssignOrg placeholder="Select Organization"
+           (keyup)="filterAssignOrganization(filterAssignOrg.value)">
+    <div *ngFor="let org of assignOrganization | slice:0:6">
+      <input type="checkbox" [checked]="org.checked" (change)="onChangingAssignOrgs($event)" value="{{org.id}}">
+      {{org.name}}
+    </div>
+    <br>
+    <div>
+      <button type="button" (click)="onClickShowAll()">Show All</button>
+    </div>
+  </div>
 </div>
-<br><br>
-<div *ngIf="tableShow">
-  <table border="1">
-    <tr>
-      <th>Index</th>
-      <th>App</th>
-      <th>Description</th>
-      <th>Update</th>
-      <th>Delete</th>
-    </tr>
 
-    <tr>
-      <td colspan="5">
-        <input #searchBox id="search-box" placeholder="Search App" (keyup)="searchApp(searchBox.value)"/>
-      </td>
-    </tr>
+<div *ngIf="showAllOrgView">
 
-    <tr
-      *ngFor="let appInfo of appList | paginate:{itemsPerPage: items, currentPage: pageNumber, totalItems: totalNumRecords}; let i = index">
-      <th>{{i + 1}}</th>
-      <th>{{appInfo.url}}</th>
-      <th>{{appInfo.description}}</th>
-      <th>
-        <button (click)="showForm(appInfo)">Edit</button>
-      </th>
-      <th>
-        <button (click)="removeApp(appInfo.id, i)">Remove</button>
-      </th>
-    </tr>
-  </table>
+  <div>
+    <h3>Organization {{randomNumber<0 ? 'available' : 'assigned'}}</h3>
+    <input type="text" #search (keyup)="showingAllOrganizations(search.value)">
+    <button type="button" (click)="onClickAssignButton()">Organization {{randomNumber>0 ? 'available' : 'assigned'}}
+    </button>
+    <button type="button" (click)="showAllOrgView=false">Go Back</button>
+  </div>
+
+  <hr>
+
+  <div
+    *ngFor="let org of showAllOrgList | paginate:{itemsPerPage: orgsItems, currentPage: pageNumberOrg, totalItems: totalNumOrgs}">
+    <input type="checkbox" [checked]="org.checked" (change)="onChangingAssignOrgs($event)" value="{{org.id}}">
+    {{org.name}}
+  </div>
+  <app-pagination (pageChange)="pageNumberOrg = $event;showingAllOrganizations()"
+                  (numberChange)="numChangeShowOrg($event)"></app-pagination>
+
 </div>
-
-<app-pagination *ngIf="tableShow" (pageChange)="pageNumber = $event;getApp()"
-                (numberChange)="numChange($event)"></app-pagination>

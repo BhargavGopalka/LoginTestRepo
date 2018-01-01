@@ -2,6 +2,15 @@ export class Organization {
   private _id: number;
   private _name: string;
   private _apps: Apps[];
+  private _checked: boolean;
+
+  get checked(): boolean {
+    return this._checked;
+  }
+
+  set checked(value: boolean) {
+    this._checked = value;
+  }
 
   get id(): number {
     return this._id;

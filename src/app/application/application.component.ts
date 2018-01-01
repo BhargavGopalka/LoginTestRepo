@@ -3,6 +3,7 @@ import {Application} from './application.model';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AppServiceService} from '../utility/shared-services/app-service.service';
 import {ApiEndpoints} from '../utility/constants/api-endpoints';
+import {Organization} from '../organization/organization.model';
 
 @Component({
   selector: 'app-application',
@@ -16,7 +17,26 @@ export class ApplicationComponent implements OnInit {
   totalNumRecords: number;
   urlMessage: string;
 
+  orgsItems = 20;
+  pageNumberOrg = 1;
+  totalNumOrgs: number;
+
   appList: Application[] = [];
+  organizationList: Organization[] = [];
+  allOrgList: Organization[] = [];
+  selectedOrganization = [];
+  allChecked = false;
+  showOrg = false;
+  assignOrganization = [];
+  assignOrgList = [];
+  assignChecked = false;
+  selectedAssignOrgs = [];
+  currentId = null;
+  showAllOrgView = false;
+  showAllOrgList = [];
+  showAllOrgName = '';
+  randomNumber = -1;
+  anotherShowOrgList = [];
 
   appForm: FormGroup;
   selectApp = null;
@@ -29,6 +49,7 @@ export class ApplicationComponent implements OnInit {
 
   ngOnInit() {
     this.getApp();
+    this.getOrganizationData();
   }
 
   numChange(val) {
@@ -37,11 +58,21 @@ export class ApplicationComponent implements OnInit {
     this.getApp();
   }
 
+  numChangeShowOrg(val) {
+    this.pageNumberOrg = 1;
+    this.orgsItems = +val;
+    this.showingAllOrganizations();
+  }
+
   getApp() {
     // const url = `app?pageNumber=${this.pageNumber}&recordsPerPage=${this.items}`;
-    this.appService.getAPI(ApiEndpoints.App + `?pageNumber=${this.pageNumber}&recordsPerPage=${this.items}`)
+    this.appService.getAPI(ApiEndpoints.App, {
+      pageNumber: this.pageNumber,
+      recordsPerPage: this.items,
+      sortBy: 'url',
+      sortOrder: 'asc'
+    })
       .subscribe(res => {
-        console.log(res);
         this.totalNumRecords = res.pager.totalRecords;
         this.appList = res.payload.data;
       });
@@ -69,6 +100,7 @@ export class ApplicationComponent implements OnInit {
 
   addApp(formVal: any) {
     if (this.appForm.valid === true) {
+      formVal['orgs'] = JSON.stringify(this.selectedOrganization);
       // const url = `app`;
       if (this.selectApp == null) {
         this.appService.postAPI(ApiEndpoints.App, formVal)
@@ -92,6 +124,154 @@ export class ApplicationComponent implements OnInit {
     }
   }
 
+  getOrganizationData() {
+    this.appService.getAPI(ApiEndpoints.Organization, {records: 'all'}).subscribe((response) => {
+      this.organizationList = response.payload.data;
+      this.allOrgList = response.payload.data;
+    });
+  }
+
+  onCheckOrganization(event) {
+    const value = +(event.target.value);
+    if (event.target.checked === true) {
+      this.selectedOrganization.push(value);
+    } else {
+      const position = this.selectedOrganization.indexOf(value);
+      this.selectedOrganization.splice(position, 1);
+    }
+  }
+
+  onSelectAllOrganization(event) {
+    if (event.target.checked === true) {
+      this.allChecked = true;
+      this.organizationList.filter((org) => {
+        this.selectedOrganization.push(org.id);
+      });
+    } else {
+      this.allChecked = false;
+      this.selectedOrganization = [];
+    }
+  }
+
+  onClickAssignOrg(id) {
+    this.showOrg = !(this.showOrg);
+    this.currentId = id;
+    this.appService.getAPI(ApiEndpoints.App + '/' + id)
+      .subscribe((response) => {
+        this.assignChecked = true;
+        this.assignOrganization = response.payload.data.orgs;
+        this.assignOrganization.filter((data) => {
+          data.checked = true;
+          this.selectedAssignOrgs.push(data.id);
+        });
+        this.assignOrgList = response.payload.data.orgs;
+      });
+  }
+
+  filterAssignOrganization(value) {
+    if (value === '') {
+      this.assignOrganization = this.assignOrgList;
+    } else {
+      const lowerCaseValue = value.toLowerCase();
+      const filterArray = this.allOrgList.filter((data) => {
+        if (data.name.toLowerCase().indexOf(lowerCaseValue) >= 0) {
+          return data;
+        }
+      });
+      this.assignOrganization = filterArray;
+    }
+    this.checkedItems();
+  }
+
+  onChangingAssignOrgs(event) {
+    const value = +(event.target.value);
+    if (event.target.checked === true) {
+      this.selectedAssignOrgs.push(value);
+      this.allOrgList.filter((data) => {
+        if (data.id === value) {
+          this.assignOrgList.push(data);
+          data.checked = true;
+        }
+      });
+    } else {
+      const position = this.selectedAssignOrgs.indexOf(value);
+      this.selectedAssignOrgs.splice(position, 1);
+      this.assignOrgList = this.assignOrgList.filter(data => {
+        if (data.id !== value) {
+          return data;
+        } else {
+          data.checked = false;
+        }
+      });
+      this.assignOrganization = this.assignOrgList;
+    }
+    const val = {};
+    val['orgs'] = JSON.stringify(this.selectedAssignOrgs);
+    this.appService.putAPI(ApiEndpoints.App + '/' + this.currentId, val)
+      .subscribe();
+  }
+
+  checkedItems() {
+    this.assignOrganization.filter((data) => {
+      for (let i = 0; i < this.assignOrgList.length; i++) {
+        if (data.id === this.assignOrgList[i].id) {
+          return data.checked = true;
+        } else {
+          continue;
+        }
+      }
+      return data.checked = false;
+    });
+  }
+
+  filterOrganization(value) {
+    const lowerCaseValue = value.toLowerCase();
+    const filterArray = this.allOrgList.filter((data) => {
+      if (data.name.toLowerCase().indexOf(lowerCaseValue) >= 0) {
+        return data;
+      }
+    });
+    this.organizationList = filterArray;
+  }
+
+  onClickShowAll() {
+    this.showAllOrgView = true;
+    this.showingAllOrganizations();
+  }
+
+  showingAllOrganizations(val?) {
+    this.showAllOrgName = val;
+    this.appService.getAPI(ApiEndpoints.Organization, {
+      pageNumber: this.pageNumberOrg,
+      recordsPerPage: this.orgsItems
+    }, {'name': this.showAllOrgName})
+      .subscribe((response) => {
+        this.totalNumOrgs = response.pager.totalRecords;
+        this.showAllOrgList = response.payload.data;
+        this.anotherShowOrgList = response.payload.data;
+        this.showAllOrgList.filter((data) => {
+          for (let i = 0; i < this.assignOrgList.length; i++) {
+            if (data.id === this.assignOrgList[i].id) {
+              return data.checked = true;
+            } else {
+              continue;
+            }
+          }
+          return data.checked = false;
+        });
+      });
+  }
+
+  onClickAssignButton() {
+    if (this.randomNumber === -1) {
+      this.randomNumber = 1;
+      this.showAllOrgList = this.assignOrgList;
+    } else {
+      this.showAllOrgList = this.anotherShowOrgList;
+      this.randomNumber = -1;
+    }
+  }
+
   removeApp(id: number, index: number) {
     // const url = `app/${id}`;
     this.appService.deleteAPI(ApiEndpoints.App + `/${id}`)
@@ -109,7 +289,8 @@ export class ApplicationComponent implements OnInit {
           Validators.required,
           Validators.pattern('https?://.+')]
       ],
-      description: [appData ? appData.description : '']
+      description: [appData ? appData.description : ''],
+      orgs: ['']
     });
   }
 

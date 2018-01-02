@@ -32,7 +32,8 @@ export class MenuDetailComponent implements OnInit {
   ivr_tz: string;
   workingArray: any;
   filesToUpload: any;
-  uploadedFile = '';
+  uploadedUserFile: string;
+  uploadedCompanyFile: string;
   showUserRecording = false;
   showCompanyRecording = false;
 
@@ -64,6 +65,9 @@ export class MenuDetailComponent implements OnInit {
         this.appService.setIVR(this.updatedIvr);
         this.workingHours = response.data.info.ivr_working_hours;
         this.ivr_tz = response.data.info.ivr_tz;
+        // debugger;
+        this.uploadedUserFile = response.data.info.client_announcement;
+        this.uploadedCompanyFile = response.data.info.company_announcement;
         this.createWorkingHoursForm();
       });
   }
@@ -276,13 +280,14 @@ export class MenuDetailComponent implements OnInit {
       }
       this.appService.postAPI(ApiEndpoints.FILES, formValue, this.filesToUpload)
         .subscribe((response) => {
+          const url = response.data.URL;
           if (number === 1) {
             this.showUserRecording = true;
+            this.uploadedUserFile = `http://${url}`;
           } else {
             this.showCompanyRecording = true;
+            this.uploadedCompanyFile = `http://${url}`;
           }
-          const url = response.data.URL;
-          this.uploadedFile = `http://${url}`;
         });
     }
   }

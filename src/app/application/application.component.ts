@@ -20,6 +20,7 @@ export class ApplicationComponent implements OnInit {
   orgsItems = 20;
   pageNumberOrg = 1;
   totalNumOrgs: number;
+  total: number;
 
   appList: Application[] = [];
   organizationList: Organization[] = [];
@@ -59,9 +60,14 @@ export class ApplicationComponent implements OnInit {
   }
 
   numChangeShowOrg(val) {
-    this.pageNumberOrg = 1;
-    this.orgsItems = +val;
-    this.showingAllOrganizations();
+    if (this.randomNumber === -1) {
+      this.pageNumberOrg = 1;
+      this.orgsItems = +val;
+      this.showingAllOrganizations();
+    } else {
+      this.pageNumberOrg = 1;
+      this.orgsItems = +val;
+    }
   }
 
   getApp() {
@@ -193,6 +199,12 @@ export class ApplicationComponent implements OnInit {
           data.checked = true;
         }
       });
+
+      this.anotherShowOrgList.filter((data) => {
+        if (data.id === value) {
+          data.checked = true;
+        }
+      });
     } else {
       const position = this.selectedAssignOrgs.indexOf(value);
       this.selectedAssignOrgs.splice(position, 1);
@@ -200,6 +212,12 @@ export class ApplicationComponent implements OnInit {
         if (data.id !== value) {
           return data;
         } else {
+          data.checked = false;
+        }
+      });
+
+      this.anotherShowOrgList.filter((data) => {
+        if (data.id === value) {
           data.checked = false;
         }
       });
@@ -247,6 +265,7 @@ export class ApplicationComponent implements OnInit {
     }, {'name': this.showAllOrgName})
       .subscribe((response) => {
         this.totalNumOrgs = response.pager.totalRecords;
+        this.total = response.pager.totalRecords;
         this.showAllOrgList = response.payload.data;
         this.anotherShowOrgList = response.payload.data;
         this.showAllOrgList.filter((data) => {
@@ -263,12 +282,27 @@ export class ApplicationComponent implements OnInit {
   }
 
   onClickAssignButton() {
+    this.orgsItems = 20;
+    this.pageNumberOrg = 1;
     if (this.randomNumber === -1) {
       this.randomNumber = 1;
       this.showAllOrgList = this.assignOrgList;
+      this.totalNumOrgs = this.showAllOrgList.length;
     } else {
       this.showAllOrgList = this.anotherShowOrgList;
       this.randomNumber = -1;
+      this.totalNumOrgs = this.total;
+    }
+    this.pageNumberOrg = 1;
+    this.orgsItems = 20;
+  }
+
+  onPageChange(event) {
+    if (this.randomNumber === -1) {
+      this.pageNumberOrg = event;
+      this.showingAllOrganizations();
+    } else {
+      this.pageNumberOrg = event;
     }
   }
 

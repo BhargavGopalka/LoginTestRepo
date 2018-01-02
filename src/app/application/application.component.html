@@ -105,7 +105,8 @@
     <input type="checkbox" [checked]="org.checked" (change)="onChangingAssignOrgs($event)" value="{{org.id}}">
     {{org.name}}
   </div>
-  <app-pagination (pageChange)="pageNumberOrg = $event;showingAllOrganizations()"
-                  (numberChange)="numChangeShowOrg($event)"></app-pagination>
+  <app-pagination
+    (pageChange)="onPageChange($event)"
+    (numberChange)="numChangeShowOrg($event)"></app-pagination>
 
 </div>

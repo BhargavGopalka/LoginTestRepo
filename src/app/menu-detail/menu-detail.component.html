@@ -61,12 +61,18 @@
         <span>Used Recording</span>
         <input type="file" placeholder="Choose User recording file" (change)="fileChange($event, 1)"
                accept=".wav, .mp3, .mp4, .ogg, .m4a">
+        <audio controls *ngIf="showUserRecording">
+          <source [src]="uploadedFile">
+        </audio>
       </div>
       <br>
       <div>
         <span>Agent Recording</span>
         <input type="file" placeholder="Change Agent recording file" (change)="fileChange($event, 2)"
                accept=".wav, .mp3, .mp4, .ogg, .m4a">
+        <audio controls *ngIf="showCompanyRecording">
+          <source [src]="uploadedFile">
+        </audio>
       </div>
       <br>
     </fieldset>

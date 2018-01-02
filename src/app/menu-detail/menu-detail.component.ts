@@ -32,6 +32,9 @@ export class MenuDetailComponent implements OnInit {
   ivr_tz: string;
   workingArray: any;
   filesToUpload: any;
+  uploadedFile = '';
+  showUserRecording = false;
+  showCompanyRecording = false;
 
   timeZone = new Date().toString().match(/([A-Z]+[\+-][0-9]+.*)/)[1];
   timeFilterArray = Constant.timeArray;
@@ -272,7 +275,15 @@ export class MenuDetailComponent implements OnInit {
         formValue['column'] = 'company_announcement';
       }
       this.appService.postAPI(ApiEndpoints.FILES, formValue, this.filesToUpload)
-        .subscribe();
+        .subscribe((response) => {
+          if (number === 1) {
+            this.showUserRecording = true;
+          } else {
+            this.showCompanyRecording = true;
+          }
+          const url = response.data.URL;
+          this.uploadedFile = `http://${url}`;
+        });
     }
   }
 

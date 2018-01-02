@@ -47,8 +47,48 @@
       </li>
     </ul>
   </div>
-
   <app-menu-form [treeItem]="updatedIvr"></app-menu-form>
+
+  <div>
+    <button type="button" (click)="menuDiscoveryStatus = !menuDiscoveryStatus">Menu Discovery Status</button>
+    <div *ngIf="menuDiscoveryStatus">
+      <table>
+        <tr>
+          <th>Operation</th>
+          <th>Last Updated</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+
+        <tr>
+          <td>Recording</td>
+          <td>{{treeDetail[0].ivr_menu_voice_rec_status_datetime | date:'medium'}}</td>
+          <td>{{treeDetail[0].ivr_menu_voice_rec_status==='Yes' ? 'Done' : 'No Status'}}</td>
+          <td>
+            <button type="button">Action</button>
+          </td>
+        </tr>
+
+        <tr>
+          <td>Transcribing</td>
+          <td>{{treeDetail[0].ivr_menu_trans_status_datetime | date:'medium'}}</td>
+          <td>{{treeDetail[0].ivr_menu_trans_status==='Yes' ? 'Done' : 'No Status'}}</td>
+          <td>
+            <button type="button">Action</button>
+          </td>
+        </tr>
+
+        <tr>
+          <td>Parsing of text</td>
+          <td>{{treeDetail[0].ivr_menu_pm_status_datetime | date:'medium'}}</td>
+          <td>{{treeDetail[0].ivr_menu_pattern_matching_status==='Yes' ? 'Done' : 'No Status'}}</td>
+          <td>
+            <button type="button">Action</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
 </div>
 
 <div *ngIf="generalInfo">

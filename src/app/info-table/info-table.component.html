@@ -84,7 +84,7 @@
       <th>State</th>
       <th>Menu Detail</th>
     </tr>
-    <tr *ngFor="let detail of details">
+    <tr *ngFor="let detail of details | paginate:{itemsPerPage: items, currentPage: pageNumber, totalItems: totalNumRecords}">
       <td>{{detail.org}}</td>
       <td [innerHTML]="detail.phone_number | boldPipe"></td>
       <td>{{detail.department}}</td>
@@ -96,4 +96,7 @@
       </td>
     </tr>
   </table>
+
+  <app-pagination (pageChange)="pageNumber = $event;doHeader()"
+                  (numberChange)="numChange($event)"></app-pagination>
 </div>

@@ -13,4 +13,5 @@ export class ApiEndpoints {
   public static MENU = 'menu';
   public static EXPORT = 'ivr/export';
   public static IVR = 'ivr';
+  public static FILES = 'files';
 }

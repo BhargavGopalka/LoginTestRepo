@@ -52,137 +52,162 @@
 </div>
 
 <div *ngIf="generalInfo">
-  <h3>Working Hours</h3>
-  <fieldset>
-    <div>
-      <!--[(ngModel)]="ivr_tz"-->
+
+  <div>
+    <h3>Recordings:</h3>
+    <fieldset>
       <br>
-      <select [(ngModel)]="ivr_tz" (change)="onChangingTimeZone(ivr_tz)">
-        <option value="" disabled>Time zone</option>
-        <option value="0">PST</option>
-        <option value="EST">EST</option>
-        <option value="MST">MST</option>
-        <option value="CST">CST</option>
-        <option value="IST">IST</option>
-        <option value="GMT">GMT</option>
-      </select>
-
-      <br><br>
       <div>
-        <div>
-          <span class="workingHoursInputField">Monday</span>
-          <input type="checkbox" [checked]="workingHours[0].isActive"
-                 (change)="onChangeSelectedDays(0, workingHours[0].isActive)">
-          <div class="display-inline" *ngIf="workingHours[0].isActive">
-            From: <input auto-complete class="workingHoursInputField" type="text"
-                         value="{{workingHours[0].timeFrom}}"
-                         [(ngModel)]="workingHours[0].timeFrom"
-                         (change)="onChangeStartingTime(0, $event.target.value)"
-                         [source]="timeFilterArray"
-                         (keyup.enter)="onChangeStartingTime(0, $event.target.value)">
-            To: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[0].timeTill}}"
-                       (change)="onChangeEndTime(0, $event.target.value)" [source]="timeFilterArray"
-                       [(ngModel)]="workingHours[0].timeTill" (keyup.enter)="onChangeEndTime(0, $event.target.value)">
-          </div>
-        </div>
-
-        <br><br>
-        <div>
-          <span class="workingHoursInputField">Tuesday</span>
-          <input type="checkbox" [checked]="workingHours[1].isActive"
-                 (change)="onChangeSelectedDays(1, workingHours[1].isActive)">
-          <div class="display-inline" *ngIf="workingHours[1].isActive">
-            From: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[1].timeFrom}}"
-                         (change)="onChangeStartingTime(1, $event.target.value)"
-                         [source]="timeFilterArray"
-                         (keyup.enter)="onChangeStartingTime(1, $event.target.value)"
-                         [(ngModel)]="workingHours[1].timeFrom">
-            To: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[1].timeTill}}"
-                       [(ngModel)]="workingHours[1].timeTill" (change)="onChangeEndTime(1, $event.target.value)"
-                       [source]="timeFilterArray" (keyup.enter)="onChangeEndTime(1, $event.target.value)">
-          </div>
-        </div>
-
-        <br><br>
-        <div>
-          <span class="workingHoursInputField">Wednesday</span>
-          <input type="checkbox" [checked]="workingHours[2].isActive"
-                 (change)="onChangeSelectedDays(2, workingHours[2].isActive)">
-          <div class="display-inline" *ngIf="workingHours[2].isActive">
-            From: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[2].timeFrom}}"
-                         [source]="timeFilterArray"
-                         [(ngModel)]="workingHours[2].timeFrom"
-                         (change)="onChangeStartingTime(2, $event.target.value)"
-          (keyup.enter)="onChangeStartingTime(2, $event.target.value)">
-            To: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[2].timeTill}}"
-                       [(ngModel)]="workingHours[2].timeTill" (change)="onChangeEndTime(2, $event.target.value)"
-                       [source]="timeFilterArray" (keyup.enter)="onChangeEndTime(2, $event.target.value)">
-          </div>
-        </div>
-
-        <br><br>
-        <div>
-          <span class="workingHoursInputField">Thursday</span>
-          <input type="checkbox" [checked]="workingHours[3].isActive"
-                 (change)="onChangeSelectedDays(3, workingHours[3].isActive)">
-          <div class="display-inline" *ngIf="workingHours[3].isActive">
-            From: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[3].timeFrom}}"
-                         (change)="onChangeStartingTime(3, $event.target.value)"
-                         [(ngModel)]="workingHours[3].timeFrom"
-                         (keyup.enter)="onChangeStartingTime(3, $event.target.value)"
-                         [source]="timeFilterArray">
-            To: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[3].timeTill}}"
-                       [(ngModel)]="workingHours[3].timeTill" (change)="onChangeEndTime(3, $event.target.value)"
-                       [source]="timeFilterArray" (keyup)="onChangeEndTime(3, $event.target.value)">
-          </div>
-        </div>
-
-        <br><br>
-        <div>
-          <span class="workingHoursInputField">Friday</span>
-          <input type="checkbox" [checked]="workingHours[4].isActive"
-                 (change)="onChangeSelectedDays(4, workingHours[4].isActive)">
-          <div class="display-inline" *ngIf="workingHours[4].isActive">
-            From: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[4].timeFrom}}"
-                         (change)="onChangeStartingTime(4, $event.target.value)" [source]="timeFilterArray"
-                         [(ngModel)]="workingHours[4].timeFrom" (keyup.enter)="onChangeStartingTime(4, $event.target.value)">
-            To: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[4].timeTill}}"
-                       [(ngModel)]="workingHours[4].timeTill" (change)="onChangeEndTime(4, $event.target.value)"
-                       [source]="timeFilterArray" (keyup.enter)="onChangeEndTime(4, $event.target.value)">
-          </div>
-        </div>
-
-        <br><br>
-        <div>
-          <span class="workingHoursInputField">Saturday</span>
-          <input type="checkbox" [checked]="workingHours[5].isActive"
-                 (change)="onChangeSelectedDays(5, workingHours[5].isActive)">
-          <div class="display-inline" *ngIf="workingHours[5].isActive">
-            From: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[5].timeFrom}}"
-                         (change)="onChangeStartingTime(5, $event.target.value)" [source]="timeFilterArray"
-                         [(ngModel)]="workingHours[5].timeFrom" (keyup.enter)="onChangeStartingTime(5, $event.target.value)">
-            To: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[5].timeTill}}"
-                       [(ngModel)]="workingHours[5].timeTill" (change)="onChangeEndTime(5, $event.target.value)"
-                       [source]="timeFilterArray" (keyup.enter)="onChangeEndTime(5, $event.target.value)">
-          </div>
-        </div>
-
-        <br><br>
-        <div>
-          <span class="workingHoursInputField">Sunday</span>
-          <input type="checkbox" [checked]="workingHours[6].isActive"
-                 (change)="onChangeSelectedDays(6, workingHours[6].isActive)">
-          <div class="display-inline" *ngIf="workingHours[6].isActive">
-            From: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[6].timeFrom}}"
-                         (change)="onChangeStartingTime(6, $event.target.value)" [source]="timeFilterArray"
-                         [(ngModel)]="workingHours[6].timeFrom" (keyup.enter)="onChangeStartingTime(6, $event.target.value)">
-            To: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[6].timeTill}}"
-                       [(ngModel)]="workingHours[6].timeTill" (change)="onChangeEndTime(6, $event.target.value)"
-                       [source]="timeFilterArray" (keyup.enter)="onChangeEndTime(6, $event.target.value)">
-          </div>
-        </div>
+        <span>Used Recording</span>
+        <input type="file" placeholder="Choose User recording file" (change)="fileChange($event, 1)"
+               accept=".wav, .mp3, .mp4, .ogg, .m4a">
       </div>
+      <br>
+      <div>
+        <span>Agent Recording</span>
+        <input type="file" placeholder="Change Agent recording file" (change)="fileChange($event, 2)"
+               accept=".wav, .mp3, .mp4, .ogg, .m4a">
+      </div>
+      <br>
+    </fieldset>
+  </div>
 
-    </div>
-  </fieldset>
+  <div>
+    <h3>Working Hours</h3>
+    <fieldset>
+      <div>
+        <!--[(ngModel)]="ivr_tz"-->
+        <br>
+        <select [(ngModel)]="ivr_tz" (change)="onChangingTimeZone(ivr_tz)">
+          <option value="" disabled>Time zone</option>
+          <option value="0">PST</option>
+          <option value="EST">EST</option>
+          <option value="MST">MST</option>
+          <option value="CST">CST</option>
+          <option value="IST">IST</option>
+          <option value="GMT">GMT</option>
+        </select>
+
+        <br><br>
+        <div>
+          <div>
+            <span class="workingHoursInputField">Monday</span>
+            <input type="checkbox" [checked]="workingHours[0].isActive"
+                   (change)="onChangeSelectedDays(0, workingHours[0].isActive)">
+            <div class="display-inline" *ngIf="workingHours[0].isActive">
+              From: <input auto-complete class="workingHoursInputField" type="text"
+                           value="{{workingHours[0].timeFrom}}"
+                           [(ngModel)]="workingHours[0].timeFrom"
+                           (change)="onChangeStartingTime(0, $event.target.value)"
+                           [source]="timeFilterArray"
+                           (keyup.enter)="onChangeStartingTime(0, $event.target.value)">
+              To: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[0].timeTill}}"
+                         (change)="onChangeEndTime(0, $event.target.value)" [source]="timeFilterArray"
+                         [(ngModel)]="workingHours[0].timeTill" (keyup.enter)="onChangeEndTime(0, $event.target.value)">
+            </div>
+          </div>
+
+          <br><br>
+          <div>
+            <span class="workingHoursInputField">Tuesday</span>
+            <input type="checkbox" [checked]="workingHours[1].isActive"
+                   (change)="onChangeSelectedDays(1, workingHours[1].isActive)">
+            <div class="display-inline" *ngIf="workingHours[1].isActive">
+              From: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[1].timeFrom}}"
+                           (change)="onChangeStartingTime(1, $event.target.value)"
+                           [source]="timeFilterArray"
+                           (keyup.enter)="onChangeStartingTime(1, $event.target.value)"
+                           [(ngModel)]="workingHours[1].timeFrom">
+              To: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[1].timeTill}}"
+                         [(ngModel)]="workingHours[1].timeTill" (change)="onChangeEndTime(1, $event.target.value)"
+                         [source]="timeFilterArray" (keyup.enter)="onChangeEndTime(1, $event.target.value)">
+            </div>
+          </div>
+
+          <br><br>
+          <div>
+            <span class="workingHoursInputField">Wednesday</span>
+            <input type="checkbox" [checked]="workingHours[2].isActive"
+                   (change)="onChangeSelectedDays(2, workingHours[2].isActive)">
+            <div class="display-inline" *ngIf="workingHours[2].isActive">
+              From: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[2].timeFrom}}"
+                           [source]="timeFilterArray"
+                           [(ngModel)]="workingHours[2].timeFrom"
+                           (change)="onChangeStartingTime(2, $event.target.value)"
+                           (keyup.enter)="onChangeStartingTime(2, $event.target.value)">
+              To: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[2].timeTill}}"
+                         [(ngModel)]="workingHours[2].timeTill" (change)="onChangeEndTime(2, $event.target.value)"
+                         [source]="timeFilterArray" (keyup.enter)="onChangeEndTime(2, $event.target.value)">
+            </div>
+          </div>
+
+          <br><br>
+          <div>
+            <span class="workingHoursInputField">Thursday</span>
+            <input type="checkbox" [checked]="workingHours[3].isActive"
+                   (change)="onChangeSelectedDays(3, workingHours[3].isActive)">
+            <div class="display-inline" *ngIf="workingHours[3].isActive">
+              From: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[3].timeFrom}}"
+                           (change)="onChangeStartingTime(3, $event.target.value)"
+                           [(ngModel)]="workingHours[3].timeFrom"
+                           (keyup.enter)="onChangeStartingTime(3, $event.target.value)"
+                           [source]="timeFilterArray">
+              To: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[3].timeTill}}"
+                         [(ngModel)]="workingHours[3].timeTill" (change)="onChangeEndTime(3, $event.target.value)"
+                         [source]="timeFilterArray" (keyup)="onChangeEndTime(3, $event.target.value)">
+            </div>
+          </div>
+
+          <br><br>
+          <div>
+            <span class="workingHoursInputField">Friday</span>
+            <input type="checkbox" [checked]="workingHours[4].isActive"
+                   (change)="onChangeSelectedDays(4, workingHours[4].isActive)">
+            <div class="display-inline" *ngIf="workingHours[4].isActive">
+              From: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[4].timeFrom}}"
+                           (change)="onChangeStartingTime(4, $event.target.value)" [source]="timeFilterArray"
+                           [(ngModel)]="workingHours[4].timeFrom"
+                           (keyup.enter)="onChangeStartingTime(4, $event.target.value)">
+              To: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[4].timeTill}}"
+                         [(ngModel)]="workingHours[4].timeTill" (change)="onChangeEndTime(4, $event.target.value)"
+                         [source]="timeFilterArray" (keyup.enter)="onChangeEndTime(4, $event.target.value)">
+            </div>
+          </div>
+
+          <br><br>
+          <div>
+            <span class="workingHoursInputField">Saturday</span>
+            <input type="checkbox" [checked]="workingHours[5].isActive"
+                   (change)="onChangeSelectedDays(5, workingHours[5].isActive)">
+            <div class="display-inline" *ngIf="workingHours[5].isActive">
+              From: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[5].timeFrom}}"
+                           (change)="onChangeStartingTime(5, $event.target.value)" [source]="timeFilterArray"
+                           [(ngModel)]="workingHours[5].timeFrom"
+                           (keyup.enter)="onChangeStartingTime(5, $event.target.value)">
+              To: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[5].timeTill}}"
+                         [(ngModel)]="workingHours[5].timeTill" (change)="onChangeEndTime(5, $event.target.value)"
+                         [source]="timeFilterArray" (keyup.enter)="onChangeEndTime(5, $event.target.value)">
+            </div>
+          </div>
+
+          <br><br>
+          <div>
+            <span class="workingHoursInputField">Sunday</span>
+            <input type="checkbox" [checked]="workingHours[6].isActive"
+                   (change)="onChangeSelectedDays(6, workingHours[6].isActive)">
+            <div class="display-inline" *ngIf="workingHours[6].isActive">
+              From: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[6].timeFrom}}"
+                           (change)="onChangeStartingTime(6, $event.target.value)" [source]="timeFilterArray"
+                           [(ngModel)]="workingHours[6].timeFrom"
+                           (keyup.enter)="onChangeStartingTime(6, $event.target.value)">
+              To: <input auto-complete class="workingHoursInputField" type="text" value="{{workingHours[6].timeTill}}"
+                         [(ngModel)]="workingHours[6].timeTill" (change)="onChangeEndTime(6, $event.target.value)"
+                         [source]="timeFilterArray" (keyup.enter)="onChangeEndTime(6, $event.target.value)">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </fieldset>
+  </div>
 </div>

@@ -31,6 +31,7 @@ export class MenuDetailComponent implements OnInit {
   workingHours = [];
   ivr_tz: string;
   workingArray: any;
+  filesToUpload: any;
 
   timeZone = new Date().toString().match(/([A-Z]+[\+-][0-9]+.*)/)[1];
   timeFilterArray = Constant.timeArray;
@@ -254,6 +255,24 @@ export class MenuDetailComponent implements OnInit {
           this.updateTime();
         }
       }
+    }
+  }
+
+  fileChange(event, number) {
+    const fileList: FileList = event.target.files;
+    if (fileList.length > 0) {
+      this.filesToUpload = fileList;
+      const formValue = {};
+      formValue['ivr_number'] = this.number;
+      formValue['convertast'] = true;
+      formValue['stripesilenc'] = true;
+      if (number === 1) {
+        formValue['column'] = 'client_announcement';
+      } else {
+        formValue['column'] = 'company_announcement';
+      }
+      this.appService.postAPI(ApiEndpoints.FILES, formValue, this.filesToUpload)
+        .subscribe();
     }
   }
 

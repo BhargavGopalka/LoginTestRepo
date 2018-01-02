@@ -13,6 +13,10 @@ import {saveAs as importedSaveAs} from 'file-saver';
 })
 export class InfoTableComponent implements OnInit {
 
+  items = 20;
+  pageNumber = 1;
+  totalNumRecords: number;
+
   details = [];
   numbers = [];
   allNumber: any[];
@@ -49,6 +53,7 @@ export class InfoTableComponent implements OnInit {
       .subscribe(res => {
           this.details = res.payload.data;
           this.exportNumbers = res.payload.numbers;
+          this.totalNumRecords = res.pager.totalRecords;
         },
         msg => console.log(`Error: ${msg.status} ${msg.statusText}`));
   }
@@ -168,10 +173,16 @@ export class InfoTableComponent implements OnInit {
     this.doHeader();
   }
 
+  numChange(val) {
+    this.pageNumber = 1;
+    this.items = +val;
+    this.doHeader();
+  }
+
   queryParams(): any {
     return {
-      pageNumber: 1,
-      recordsPerPage: 20
+      pageNumber: this.pageNumber,
+      recordsPerPage: this.items
     };
   }
 

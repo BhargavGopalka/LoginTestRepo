@@ -8,6 +8,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/map';
 import 'rxjs/Rx';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {catchError, tap} from 'rxjs/operators';
 
 @Injectable()
 export class AppServiceService extends ChildService {
@@ -25,7 +26,7 @@ export class AppServiceService extends ChildService {
   /* End */
 
   private ivr: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-
+  private parentView: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   /* Getting isLoading value */
   private isLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
@@ -46,8 +47,6 @@ export class AppServiceService extends ChildService {
   }
 
   /* Current IVR */
-
-
   getIVR(): Observable<any> {
     return this.ivr.asObservable();
   }
@@ -57,8 +56,6 @@ export class AppServiceService extends ChildService {
   }
 
   /* Current IVR */
-  private parentView: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
   getView(): Observable<boolean> {
     return this.parentView.asObservable();
   }
@@ -76,7 +73,9 @@ export class AppServiceService extends ChildService {
       this.showLoader();
     }
 
-    queryParams ? queryParams : (queryParams = {});
+    if (!queryParams) {
+      queryParams = {};
+    }
     (searchParams) ? (queryParams['search'] = JSON.stringify(searchParams)) : '';
     let params = new HttpParams();
     for (const key in queryParams) {
@@ -101,7 +100,9 @@ export class AppServiceService extends ChildService {
       this.showLoader();
     }
 
-    queryParams ? queryParams : (queryParams = {});
+    if (!queryParams) {
+      queryParams = {};
+    }
     (searchParams) ? (queryParams['search'] = JSON.stringify(searchParams)) : '';
     let params = new HttpParams();
     for (const key in queryParams) {
@@ -171,22 +172,51 @@ export class AppServiceService extends ChildService {
   }
 
   /* Add record */
-  postAPI(endpoint: string, formVal: any): Observable<any> {
+  postAPI(endpoint: string, formVal: any, files?): Observable<any> {
     // const header = new HttpHeaders();
     // header.set('Authorization', sessionStorage.getItem('currentUser'));
     this.showLoader();
-    return this.http.post(Constant.baseUrl + endpoint, formVal, {headers: this.httpOptions})
-      .catch(this.onCatch)
-      .do(res => {
-          this.extractData(res, true);
-          return res;
-        },
-        error => {
-          this.onGettingError(error);
-        })
-      .finally(() => {
-        this.hideLoader();
-      });
+    if (!files) {
+      return this.http.post(Constant.baseCrawlerUrl + endpoint, formVal, {headers: this.httpOptions})
+        .catch(this.onCatch)
+        .do(res => {
+            this.extractData(res, true);
+            return res;
+          },
+          error => {
+            this.onGettingError(error);
+          })
+        .finally(() => {
+          this.hideLoader();
+        });
+    } else {
+
+      const formData: FormData = new FormData();
+      if (formVal !== '' && formVal !== undefined && formVal !== null) {
+        for (const property in formVal) {
+          if (formVal.hasOwnProperty(property)) {
+            formData.append(property, formVal[property]);
+          }
+        }
+      }
+
+      const singleFile: File = files[0];
+      formData.append('file', singleFile, singleFile.name);
+      return this.http.post<any>(Constant.baseCrawlerUrl + endpoint, formData, {headers: this.httpOptions})
+        .pipe(
+          tap((response: any) => {
+              this.extractData(response, true);
+              return response;
+            },
+            (error) => {
+              this.onGettingError(error);
+            }),
+          catchError(this.onCatch)
+        )
+        .finally(() => {
+          this.hideLoader();
+        });
+    }
   }
 
   /* Update record */
@@ -246,7 +276,7 @@ export class AppServiceService extends ChildService {
   }
 
   onGettingError(errorResponse) {
-    const errorMsg = errorResponse.error.payload.error;
+    const errorMsg = errorResponse.error.message;
     this.toastr.error(errorMsg);
   }
 

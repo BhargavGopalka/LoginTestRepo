@@ -1,3 +1,47 @@
+<div>
+  <button type="button" (click)="menuDiscoveryStatus = !menuDiscoveryStatus">Menu Discovery Status</button>
+  <button type="button" (click)="onClickRefresh()">Refresh</button>
+  <button type="button" (click)="onClickAutoCrawl()">{{autoCrawlerMessage}} auto crawl</button>
+  <div *ngIf="menuDiscoveryStatus">
+    <table>
+      <tr>
+        <th>Operation</th>
+        <th>Last Updated</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+
+      <tr>
+        <td>Recording</td>
+        <td>{{treeItem.ivr_menu_voice_rec_status_datetime | date:'medium'}}</td>
+        <td>{{recordingStatus}}</td>
+        <td>
+          <button type="button" (click)="onClickAction(1)">Action</button>
+        </td>
+      </tr>
+
+      <tr>
+        <td>Transcribing</td>
+        <td>{{treeItem.ivr_menu_trans_status_datetime | date:'medium'}}</td>
+        <td>{{transcribingStatus}}</td>
+        <td>
+          <button type="button" (click)="onClickAction(2)">Action</button>
+        </td>
+      </tr>
+
+      <tr>
+        <td>Parsing of text</td>
+        <td>{{treeItem.ivr_menu_pm_status_datetime | date:'medium'}}</td>
+        <td>{{parsingoftextStatus}}</td>
+        <td>
+          <button type="button" (click)="onClickAction(3)">Action</button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+<br>
+
 <!-- Form View -->
 <div *ngIf="showForm">
   <form [formGroup]="crawlerForm">
@@ -127,7 +171,7 @@
       <div>
         <a class="nameField">DTMF:</a>
         <input class="inputField" type="text" placeholder="DTMF" formControlName="ivr_menu_dtmf_seq"
-        (keyup)="onAddDtmf($event.key)"/>
+               (keyup)="onAddDtmf($event.key)"/>
       </div>
       <br>
 

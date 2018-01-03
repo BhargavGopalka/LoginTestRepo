@@ -40,8 +40,6 @@ export class MenuDetailComponent implements OnInit {
   timeZone = new Date().toString().match(/([A-Z]+[\+-][0-9]+.*)/)[1];
   timeFilterArray = Constant.timeArray;
 
-  menuDiscoveryStatus = false;
-
   constructor(private appService: AppServiceService,
               private router: Router,
               private toastr: ToastrService) {

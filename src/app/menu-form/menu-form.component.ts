@@ -26,6 +26,13 @@ export class MenuFormComponent implements OnInit {
   sTimeArray = [];
   dtmfSTimeArray = [];
 
+  recordingStatus = 'No Status';
+  transcribingStatus = 'No Status';
+  parsingoftextStatus = 'No Status';
+  autoCrawlerMessage = 'Start';
+
+  menuDiscoveryStatus = false;
+
   constructor(private appService: AppServiceService,
               private toastr: ToastrService) {
   }
@@ -76,9 +83,62 @@ export class MenuFormComponent implements OnInit {
     this.appService.getIVR()
       .subscribe((ivr) => {
         this.treeItem = ivr;
+        this.getStatusMessages();
         this.createStime();
         this.createCrawlerForm();
       });
+  }
+
+  getStatusMessages() {
+    if (this.treeItem) {
+      if (this.treeItem.ivr_menu_pattern_matching_status === 'Yes') {
+        this.parsingoftextStatus = 'Done';
+      }
+      if (this.treeItem.ivr_menu_pattern_matching_status === 'InProcess') {
+        this.parsingoftextStatus = 'In Process';
+      }
+      if (this.treeItem.ivr_menu_pattern_matching_status === 'No') {
+        this.parsingoftextStatus = 'In queue';
+      }
+      if (this.treeItem.ivr_menu_pattern_matching_status === 'Error') {
+        this.parsingoftextStatus = 'Error';
+      }
+      if (this.treeItem.ivr_menu_pattern_matching_status === '') {
+        this.parsingoftextStatus = 'No Status';
+      }
+
+      if (this.treeItem.ivr_menu_trans_status === 'Yes') {
+        this.transcribingStatus = 'Done';
+      }
+      if (this.treeItem.ivr_menu_trans_status === 'InProcess') {
+        this.transcribingStatus = 'In Process';
+      }
+      if (this.treeItem.ivr_menu_trans_status === 'No') {
+        this.transcribingStatus = 'In queue';
+      }
+      if (this.treeItem.ivr_menu_trans_status === 'Error') {
+        this.transcribingStatus = 'Error';
+      }
+      if (this.treeItem.ivr_menu_trans_status === '') {
+        this.transcribingStatus = 'No Status';
+      }
+
+      if (this.treeItem.ivr_menu_voice_rec_status === 'Yes') {
+        this.recordingStatus = 'Done';
+      }
+      if (this.treeItem.ivr_menu_voice_rec_status === 'InProcess') {
+        this.recordingStatus = 'In Process';
+      }
+      if (this.treeItem.ivr_menu_voice_rec_status === 'No') {
+        this.recordingStatus = 'In queue';
+      }
+      if (this.treeItem.ivr_menu_voice_rec_status === 'Error') {
+        this.recordingStatus = 'Error';
+      }
+      if (this.treeItem.ivr_menu_voice_rec_status === '') {
+        this.recordingStatus = 'No Status';
+      }
+    }
   }
 
   getParentView() {
@@ -199,6 +259,50 @@ export class MenuFormComponent implements OnInit {
     this.appService.deleteAPI(ApiEndpoints.MENU + '/' + this.treeItem.ivr_menu_id)
       .subscribe((response) => {
         this.addLeafForm = false;
+      });
+  }
+
+  onClickAction(number) {
+    const formValue = {};
+    if (number === 1) {
+      formValue['field'] = 'ivr_menu_voice_rec_status';
+    }
+    if (number === 2) {
+      formValue['field'] = 'ivr_menu_trans_status';
+    }
+    if (number === 3) {
+      formValue['field'] = 'ivr_menu_pattern_matching_status';
+    }
+
+    this.appService.putAPI(ApiEndpoints.CHANGESTATUS + '/' + this.treeItem.ivr_menu_id, formValue)
+      .subscribe((response) => {
+        this.treeItem = response.payload.data;
+        this.getStatusMessages();
+      });
+  }
+
+  onClickRefresh() {
+    this.appService.getAPI(ApiEndpoints.MENU + '/' + this.treeItem.ivr_menu_id)
+      .subscribe((response) => {
+        this.treeItem = response.payload.data;
+        this.getStatusMessages();
+      });
+  }
+
+  onClickAutoCrawl() {
+    const formValue = {};
+    if (this.autoCrawlerMessage === 'Start') {
+      formValue['auto_crawl'] = '1';
+    } else {
+      formValue['auto_crawl'] = '0';
+    }
+    this.appService.putAPI(ApiEndpoints.MENU + '/' + this.treeItem.ivr_menu_id, formValue)
+      .subscribe((response) => {
+        if (this.autoCrawlerMessage === 'Start') {
+          this.autoCrawlerMessage = 'Stop';
+        } else {
+          this.autoCrawlerMessage = 'Start';
+        }
       });
   }
 

@@ -14,4 +14,5 @@ export class ApiEndpoints {
   public static EXPORT = 'ivr/export';
   public static IVR = 'ivr';
   public static FILES = 'files';
+  public static CHANGESTATUS = 'changeStatus';
 }
